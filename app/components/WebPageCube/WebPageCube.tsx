@@ -149,7 +149,7 @@ export default function WebPageCube() {
           <div
             className="absolute w-[200px] h-[200px] border-2 border-pink-500 bg-pink-200/20 overflow-hidden"
             style={{
-              transform: 'translate(-50%, -50%) translateZ(-100px)',
+              transform: 'translate(-50%, -50%) translateZ(-100px) rotateY(180deg)',
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
