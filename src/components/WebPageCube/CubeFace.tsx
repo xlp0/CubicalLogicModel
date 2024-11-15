@@ -1,4 +1,4 @@
-"use client";
+import React from 'react';
 
 interface CubeFaceProps {
   position: [number, number, number] | 'front' | 'back' | 'right' | 'left' | 'top' | 'bottom';

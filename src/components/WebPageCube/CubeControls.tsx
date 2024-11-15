@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
@@ -22,11 +20,12 @@ export default function CubeControls({
   onResetRotation,
 }: CubeControlsProps) {
   return (
-    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 p-4 rounded-lg flex flex-col items-center gap-4">
+    <div className="absolute bottom-4 right-4 bg-black/70 p-4 rounded-lg flex flex-col items-center gap-4 backdrop-blur-sm">
       <div className="flex gap-2">
         <Button
           onClick={onToggleRotation}
           variant={isRotating ? "destructive" : "default"}
+          className={`text-white hover:text-white ${isRotating ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}
         >
           {isRotating ? "Stop Rotation" : "Start Rotation"}
         </Button>
@@ -34,13 +33,14 @@ export default function CubeControls({
           onClick={onResetRotation}
           variant="outline"
           size="icon"
+          className="border-white hover:border-white border-2 bg-black/50"
         >
-          <RotateCcw className="h-4 w-4" />
+          <RotateCcw className="h-4 w-4 text-white" />
         </Button>
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm text-white">Rotation Angle</label>
+        <label className="text-sm font-medium text-white">Rotation Speed</label>
         <div className="w-48">
           <Slider
             defaultValue={[1]}
@@ -48,16 +48,27 @@ export default function CubeControls({
             max={10}
             step={0.1}
             onChange={onSpeedChange}
+            className="[&>span]:bg-white"
           />
         </div>
       </div>
 
       <div className="flex gap-2">
-        <Button variant="outline" size="icon" onClick={() => onZoom('out')}>
-          <ZoomOut className="h-4 w-4" />
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="border-white hover:border-white border-2 bg-black/50"
+          onClick={() => onZoom('out')}
+        >
+          <ZoomOut className="h-4 w-4 text-white" />
         </Button>
-        <Button variant="outline" size="icon" onClick={() => onZoom('in')}>
-          <ZoomIn className="h-4 w-4" />
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="border-white hover:border-white border-2 bg-black/50"
+          onClick={() => onZoom('in')}
+        >
+          <ZoomIn className="h-4 w-4 text-white" />
         </Button>
       </div>
     </div>

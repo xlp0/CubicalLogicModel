@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 export default function AbstractSpec() {
-  const [context, setContext] = useState("There is a great demand in Knowledge Management.");
+  const [context, setContext] = useState("There is great demand in Knowledge Management.");
   const [goal, setGoal] = useState("Facilitate CI/CD for content updates.");
   const [successCriteria, setSuccessCriteria] = useState("Provide real-time tracking and automated updates.");
 
