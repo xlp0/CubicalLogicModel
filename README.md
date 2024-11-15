@@ -1,84 +1,120 @@
 # Cubical Logic Model
 
-An interactive 3D cube interface for presenting information about the Cubical Logic Model. This project is built with Next.js, React Three Fiber, and TypeScript, featuring multiple interactive faces with different functionalities.
+An interactive 3D cube interface built with Astro and React, demonstrating the relationship between abstract specifications and concrete implementations in software development.
 
 ## 🚀 Features
 
-- Interactive 3D cube with smooth rotation and manipulation
-- Multiple functional faces including:
-  - Clock
-  - Calculator
-  - Color Picker
-  - Notes
-  - Abstract Specifications
-  - Concrete Implementations
-  - Realistic Expectations
-- Responsive design with touch and mouse controls
-- Real-time cube manipulation (rotation, scaling, positioning)
-- Modern UI components using Radix UI
-- Fully typed with TypeScript
+- Interactive 3D cube visualization
+- Real-time rotation controls
+- Zoom and movement functionality
+- Dynamic face content rendering
+- Smooth animations and transitions
+- High-contrast UI controls
+- Responsive design
 
-## 🛠️ Tech Stack
+## 🛠️ Technology Stack
 
-- **Framework**: Next.js 13+
-- **Language**: TypeScript
-- **3D Rendering**: React Three Fiber
-- **UI Components**: Radix UI
-- **Styling**: Tailwind CSS
-- **State Management**: React Hooks
-- **Animation**: RequestAnimationFrame API
+- **Framework:** [Astro](https://astro.build/) with React integration
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** 
+  - Radix UI primitives
+  - Lucide React icons
+  - Custom React components
 
 ## 🏗️ Project Structure
 
 ```
-/app
-  /components
-    /WebPageCube          # Main cube component
-      /LocalContent       # Individual face components
-      CubeControls.tsx    # Cube manipulation controls
-      CubeFace.tsx        # Generic face component
-      WebPageCube.tsx     # Main cube implementation
+src/
+├── components/
+│   ├── WebPageCube/
+│   │   ├── CubeFace.tsx         # Generic cube face component
+│   │   ├── CubeControls.tsx     # Rotation and movement controls
+│   │   ├── WebPageCube.tsx      # Main cube container
+│   │   └── LocalContent/        # Face-specific content
+│   └── ui/                      # Reusable UI components
+├── layouts/
+│   └── Layout.astro            # Main layout template
+└── pages/
+    └── index.astro             # Homepage
 ```
+
+## 🎮 Controls
+
+- **Rotation:** Toggle automatic rotation and adjust speed
+- **Manual Control:** Click and drag to rotate the cube
+- **Zoom:** Use zoom in/out buttons to adjust view
+- **Reset:** Return to default position and rotation
 
 ## 🚦 Getting Started
 
-1. **Clone the repository**
-   ```bash
-   git clone [your-repo-url]
-   ```
+1. Clone the repository
+```bash
+git clone [repository-url]
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+2. Install dependencies
+```bash
+npm install
+```
 
-3. **Run the development server**
-   ```bash
-   npm run dev
-   ```
+3. Start the development server
+```bash
+npm run dev
+```
 
-4. **Open your browser**
-   Navigate to `http://localhost:3000`
+4. Build for production
+```bash
+npm run build
+```
 
-## 🎮 Usage
+## 🎯 Core Concepts
 
-- **Rotation**: Click and drag the cube to rotate it manually
-- **Auto-rotation**: Toggle automatic rotation using controls
-- **Scaling**: Zoom in/out using the scale controls
-- **Position**: Adjust the cube's position in 3D space
-- **Face Interaction**: Click on any face to interact with its specific functionality
+The cube represents the relationship between:
+- Abstract specifications (front/back faces)
+- Concrete implementations (left/right faces)
+- Realistic expectations (top/bottom faces)
 
-## 🛠️ Available Scripts
+Each face demonstrates different aspects of software development methodology through interactive content.
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint
+## 🧩 Components
 
-## 🤝 Contributing
+### WebPageCube
+The main container component managing the 3D transformation and state.
 
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
+### CubeFace
+A reusable component for rendering individual cube faces with proper positioning and rotation.
+
+### CubeControls
+User interface for manipulating the cube's position, rotation, and scale.
+
+## 📦 Dependencies
+
+- @astrojs/react
+- @astrojs/tailwind
+- @radix-ui/react-slider
+- lucide-react
+- tailwindcss
+- typescript
+
+## 🎨 Styling
+
+The project uses Tailwind CSS with custom utilities for:
+- 3D transformations
+- Perspective handling
+- Responsive design
+- High-contrast UI elements
+
+## 🔧 Configuration
+
+- TypeScript configuration in `tsconfig.json`
+- Astro configuration in `astro.config.mjs`
+- Tailwind configuration in `tailwind.config.mjs`
 
 ## 📝 License
 
-This project is MIT licensed.
+MIT License - feel free to use this project for learning and development purposes.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
