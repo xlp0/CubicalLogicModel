@@ -27,17 +27,81 @@ An interactive 3D cube interface built with Astro and React, demonstrating the r
 ```
 src/
 ├── components/
-│   ├── WebPageCube/
-│   │   ├── CubeFace.tsx         # Generic cube face component
-│   │   ├── CubeControls.tsx     # Rotation and movement controls
-│   │   ├── WebPageCube.tsx      # Main cube container
-│   │   └── LocalContent/        # Face-specific content
-│   └── ui/                      # Reusable UI components
-├── layouts/
-│   └── Layout.astro            # Main layout template
-└── pages/
-    └── index.astro             # Homepage
+│   ├── CardContent/           # Dynamically loadable cube face components
+│   │   ├── AbstractSpec.tsx   # Front face: Abstract specification view
+│   │   ├── Clock.tsx         # Back face: Real-time clock display
+│   │   ├── ConcreteImpl.tsx  # Right face: Implementation details
+│   │   ├── Counter.tsx       # Left face: Interactive counter
+│   │   ├── Notes.tsx         # Bottom face: Documentation view
+│   │   ├── README.md         # Component guidelines and documentation
+│   │   └── ...              # Other card components
+│   │
+│   └── WebPageCube/          # Core cube implementation
+│       ├── WebPageCube.tsx   # Main cube component and 3D logic
+│       ├── CubeControls.tsx  # UI controls for cube interaction
+│       ├── HCard.tsx         # Dynamic component loader
+│       └── ...              # Other cube-related components
+│
+├── pages/                    # Astro pages
+│   └── index.astro          # Main entry point
+│
+└── ...                      # Other project files
 ```
+
+### Architectural Changes
+
+#### Component Organization
+
+We've made significant improvements to the project architecture by reorganizing the component structure:
+
+1. **Separation of Card Content**
+   - Moved from `WebPageCube/LocalContent` to root-level `components/CardContent`
+   - Better reflects the components' independent, reusable nature
+   - Makes components more discoverable and maintainable
+
+2. **HCard Evolution**
+   - Changed from a local component loader to a global dynamic content system
+   - Now accepts path-based imports for maximum flexibility
+   - Allows for easier addition of new card components without modifying HCard
+
+3. **Why We Eliminated LocalContent**
+   - **Improved Modularity**: Components are no longer tightly coupled to WebPageCube
+   - **Better Scalability**: Easier to add new components without cluttering the cube implementation
+   - **Enhanced Reusability**: Components can be used in other parts of the application
+   - **Clearer Dependencies**: Direct import paths make dependencies explicit
+   - **Simplified Development**: Clear separation between cube logic and content
+
+4. **Benefits of New Structure**
+   - **Cleaner Organization**: Clear separation between infrastructure and content
+   - **Better Developer Experience**: Easier to find and modify components
+   - **Improved Maintainability**: Each component can evolve independently
+   - **Future-Proof**: Ready for additional features and components
+
+### Component Guidelines
+
+Each cube face component should:
+1. Be self-contained and independently loadable
+2. Follow the 400x400px dimension standard (scaled down by 0.5 in the cube)
+3. Handle its own state and side effects
+4. Consider performance impact on cube rotation
+5. Implement proper loading and error states
+
+### Performance Considerations
+
+The new architecture improves performance through:
+1. Dynamic imports for code splitting
+2. Memoization of component instances
+3. Isolated re-renders
+4. Optimized state management
+
+### Future Extensibility
+
+This structure supports future enhancements such as:
+1. Additional cube face components
+2. Alternative card layouts
+3. Dynamic component marketplace
+4. Shared component state management
+5. Custom theming and styling systems
 
 ## 🎮 Controls
 
