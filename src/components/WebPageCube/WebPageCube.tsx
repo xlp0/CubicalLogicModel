@@ -1,13 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import CubeFace from "./CubeFace";
 import CubeControls from "./CubeControls";
-import Clock from "./LocalContent/Clock";
-import Calculator from "./LocalContent/Calculator";
-import AbstractSpec from "./LocalContent/AbstractSpec";
-import ColorPicker from "./LocalContent/ColorPicker";
-import RealisticExpectations from "./LocalContent/RealisticExpectations";
-import Notes from "./LocalContent/Notes";
-import ConcreteImpl from "./LocalContent/ConcreteImpl";
+import HCard from "./HCard";
+
 
 export default function WebPageCube() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -116,7 +110,7 @@ export default function WebPageCube() {
 
         {/* 50% Reference Lines */}
         <div className="absolute w-[10px] h-full bg-red-500/50" style={{ left: '50%' }} />
-        <div className="absolute w-full h-[1px] bg-purple-500/50" style={{ top: '50%' }} />
+        <div className="absolute w-full h-[10px] bg-purple-500/50" style={{ top: '50%' }} />
         <div className="preserve-3d absolute bg-yellow-500/50" 
           style={{ 
             left: '50%', 
@@ -139,9 +133,9 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <AbstractSpec />
+              <HCard importPath="../CardContent/AbstractSpec" />
             </div>
-          </div>          
+          </div>
 
           {/* Centered Square BACK*/}
           <div
@@ -151,9 +145,9 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <AbstractSpec />
+            <HCard importPath="../CardContent/AbstractSpec" />
             </div>
-          </div>          
+          </div>
 
           {/* Centered Square RIGHT*/}
           <div
@@ -163,9 +157,9 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <ConcreteImpl />
+            <HCard importPath="../CardContent/ConcreteImpl" />
             </div>
-          </div>          
+          </div>
 
           {/* Centered Square LEFT*/}
           <div
@@ -175,9 +169,9 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <ConcreteImpl />
+            <HCard importPath="../CardContent/Counter" />
             </div>
-          </div>          
+          </div>
 
           {/* Centered Square TOP*/}
           <div
@@ -187,9 +181,9 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <RealisticExpectations />
+              <HCard importPath="../CardContent/RealisticExpectations" />
             </div>
-          </div>          
+          </div>
 
           {/* Centered Square BOTTOM*/}
           <div
@@ -199,9 +193,9 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <RealisticExpectations />
+              <HCard importPath="../CardContent/Notes" />
             </div>
-          </div>          
+          </div>
         </div>
 
 
