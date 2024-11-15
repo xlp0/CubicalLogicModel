@@ -1,28 +1,46 @@
-'use client';
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
-import * as React from 'react';
-import * as SliderPrimitive from '@radix-ui/react-slider';
+export interface SliderProps {
+  defaultValue?: number;
+  min?: number;
+  max?: number;
+  step?: number;
+  onChange?: (value: number) => void;
+  className?: string;
+  label?: string;
+}
 
-import { cn } from '@/lib/utils';
+const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
+  ({ className, label, onChange, ...props }, ref) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange?.(Number(e.target.value));
+    };
 
-const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <SliderPrimitive.Root
-    ref={ref}
-    className={cn(
-      'relative flex w-full touch-none select-none items-center',
-      className
-    )}
-    {...props}
-  >
-    <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
-      <SliderPrimitive.Range className="absolute h-full bg-primary" />
-    </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
-  </SliderPrimitive.Root>
-));
-Slider.displayName = SliderPrimitive.Root.displayName;
+    return (
+      <div className="relative w-full">
+        {label && (
+          <label className="mb-2 block text-sm font-medium">
+            {label}
+          </label>
+        )}
+        <input
+          type="range"
+          className={cn(
+            "w-full cursor-pointer appearance-none bg-gray-200 rounded-lg h-2 accent-primary",
+            "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+            "hover:bg-gray-300",
+            className
+          )}
+          ref={ref}
+          onChange={handleChange}
+          {...props}
+        />
+      </div>
+    );
+  }
+);
+
+Slider.displayName = "Slider";
 
 export { Slider };
