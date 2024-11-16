@@ -170,7 +170,14 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-            <HCard importPath="../CardContent/Counter" />
+              <HCard 
+                importPath="../CardContent/SpotifyPlayer"
+                componentProps={{
+                  spotifyUri: "spotify:track:4cOdK2wGLETKBW3PvgPWqT", // Rick Astley - Never Gonna Give You Up
+                  title: "Featured Track",
+                  type: "track"
+                }}
+              />
             </div>
           </div>
 
