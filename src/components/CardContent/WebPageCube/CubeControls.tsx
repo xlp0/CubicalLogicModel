@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 
 interface CubeControlsProps {
   onToggleRotation: () => void;
   isRotating: boolean;
-  onMove: (direction: 'up' | 'down' | 'left' | 'right') => void;
   onZoom: (direction: 'in' | 'out') => void;
   onResetRotation: () => void;
 }
@@ -12,12 +11,11 @@ interface CubeControlsProps {
 export default function CubeControls({
   onToggleRotation,
   isRotating,
-  onMove,
   onZoom,
   onResetRotation,
 }: CubeControlsProps) {
   return (
-    <div className="absolute bottom-4 right-4 bg-black/70 p-4 rounded-lg flex flex-col items-center gap-4 backdrop-blur-sm">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 p-4 rounded-lg flex flex-col items-center gap-4 backdrop-blur-sm z-50">
       <div className="flex gap-2">
         <Button
           onClick={onToggleRotation}

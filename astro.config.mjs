@@ -11,5 +11,8 @@ export default defineConfig({
     ssr: {
       noExternal: ['@radix-ui/*', 'class-variance-authority']
     }
+  },
+  devToolbar: {
+    enabled: false
   }
 });

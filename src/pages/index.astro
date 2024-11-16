@@ -1,10 +1,63 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Split from 'react-split';
 import WebPageCube from '../components/WebPageCube/WebPageCube';
+import ThreeJsCube from '../components/CardContent/ThreeJsCube';
 ---
 
 <Layout title="Cubical Logic Model">
-  <main class="min-h-screen bg-gradient-to-b from-gray-900 to-gray-700">
-    <WebPageCube client:load />
-  </main>
+  <div class="split-container">
+    <div class="split">
+      <div class="split-item">
+        <WebPageCube client:only="react" />
+      </div>
+      <div class="split-item">
+        <ThreeJsCube client:only="react" />
+      </div>
+      <div class="gutter"></div>
+    </div>
+  </div>
 </Layout>
+
+<style>
+  .split-container {
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .split {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+  }
+
+  .split-item {
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .gutter {
+    background-color: #4a5568;
+    cursor: col-resize;
+    width: 4px;
+  }
+
+  .gutter:hover {
+    background-color: #718096;
+  }
+</style>
+
+<script>
+  import Split from 'react-split';
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    Split({
+      columnGutters: [{
+        track: 1,
+        element: document.querySelector('.gutter') as HTMLElement,
+      }],
+      minSize: 300,
+    });
+  });
+</script>

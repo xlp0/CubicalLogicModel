@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import * as THREE from 'three';
+import ThreeJsControls from './ThreeJsControls';
 import { Button } from '@/components/ui/button';
 import { Play, Pause } from 'lucide-react';
-import * as THREE from 'three';
 
 interface CubeProps {
   isRotating: boolean;
@@ -57,61 +58,96 @@ const ThreeJsCube: React.FC<ThreeJsCubeProps> = ({
   title = "3D Coordinate System"
 }) => {
   const [isRotating, setIsRotating] = useState(true);
+  const [canvasHeight, setCanvasHeight] = useState(0);
+  const controlsRef = useRef<any>(null);
+
+  useEffect(() => {
+    setCanvasHeight(window.innerHeight - 200); // Adjust for header and controls
+    
+    const handleResize = () => {
+      setCanvasHeight(window.innerHeight - 200);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleResetView = () => {
+    if (controlsRef.current) {
+      controlsRef.current.reset();
+    }
+  };
+
+  const handleZoom = (direction: 'in' | 'out') => {
+    if (controlsRef.current) {
+      const delta = direction === 'in' ? -1 : 1;
+      controlsRef.current.dollyTo(
+        controlsRef.current.getDistance() * (1 + delta * 0.1),
+        true
+      );
+    }
+  };
+
+  if (canvasHeight === 0) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900">
+        <div className="text-white text-xl">Loading 3D Scene...</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-4">
-      <div className="w-full h-full bg-gray-700 rounded-lg p-4 flex flex-col">
-        <div className="text-white text-center text-lg font-semibold mb-3">
-          {title}
-        </div>
-        <div className="flex-grow relative w-full bg-black rounded-lg overflow-hidden mb-4">
-          <Canvas 
-            shadows
-            style={{ width: '100%', height: '100%' }}
-            camera={{ 
-              position: [2, 2, 2],
-              fov: 50,
-              near: 0.1,
-              far: 1000
-            }}
-          >
-            <color attach="background" args={['#000000']} />
-            
-            {/* Lighting */}
-            <ambientLight intensity={0.6} />
-            <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-            <directionalLight position={[-5, -5, -5]} intensity={0.2} />
-            
-            {/* Scene Content */}
-            <CoordinateSystem />
-            <MiniCube isRotating={isRotating} />
-            
-            {/* Controls */}
-            <OrbitControls 
-              enableZoom={true}
-              minDistance={1}
-              maxDistance={10}
-              minPolarAngle={Math.PI / 6}
-              maxPolarAngle={Math.PI * 5 / 6}
-              target={[0, 0, 0]}
-              enableDamping
-              dampingFactor={0.05}
-            />
-          </Canvas>
-        </div>
-        <div className="flex justify-center">
-          <Button
-            onClick={() => setIsRotating(!isRotating)}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white transition-colors px-6 py-2"
-          >
-            {isRotating ? (
-              <Pause className="h-5 w-5" />
-            ) : (
-              <Play className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
+    <div className="relative flex flex-col items-center justify-center w-full h-screen bg-gray-900">
+      <div className="absolute top-4 w-full text-center z-10">
+        <h2 className="text-white text-xl font-semibold">{title}</h2>
       </div>
+      
+      <div 
+        className="flex-grow flex items-center justify-center w-full relative"
+        style={{ height: `${canvasHeight}px` }}
+      >
+        <Canvas 
+          shadows
+          camera={{ 
+            position: [2, 2, 2],
+            fov: 50,
+            near: 0.1,
+            far: 1000
+          }}
+          className="w-full max-w-[800px] h-full"
+        >
+          <color attach="background" args={['#000000']} />
+          
+          {/* Lighting */}
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
+          <directionalLight position={[-5, -5, -5]} intensity={0.2} />
+          
+          {/* Scene Content */}
+          <CoordinateSystem />
+          <MiniCube isRotating={isRotating} />
+          
+          {/* Controls */}
+          <OrbitControls 
+            ref={controlsRef}
+            enableZoom={true}
+            minDistance={1}
+            maxDistance={10}
+            minPolarAngle={Math.PI / 6}
+            maxPolarAngle={Math.PI * 5 / 6}
+            target={[0, 0, 0]}
+            enableDamping
+            dampingFactor={0.05}
+          />
+        </Canvas>
+      </div>
+      
+      <ThreeJsControls
+        isRotating={isRotating}
+        onToggleRotation={() => setIsRotating(!isRotating)}
+        onResetView={handleResetView}
+        onZoom={handleZoom}
+      />
     </div>
   );
 };
