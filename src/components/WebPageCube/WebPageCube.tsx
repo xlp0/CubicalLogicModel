@@ -194,7 +194,13 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <HCard importPath="../CardContent/YouTubePlayer" />
+              <HCard 
+                importPath="../CardContent/YouTubePlayer"
+                componentProps={{
+                  videoId: "HszHill46_M",
+                  title: "Featured Video"
+                }}
+              />
             </div>
           </div>
         </div>
