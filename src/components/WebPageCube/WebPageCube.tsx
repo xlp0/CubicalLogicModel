@@ -194,7 +194,7 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <HCard importPath="../CardContent/Notes" />
+              <HCard importPath="../CardContent/YouTubePlayer" />
             </div>
           </div>
         </div>
