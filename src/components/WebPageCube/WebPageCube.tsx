@@ -9,26 +9,32 @@ export default function WebPageCube() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(0.5);
   const [isRotating, setIsRotating] = useState(true);
-  const [rotationSpeed, setRotationSpeed] = useState(0.01);
   const [isDragging, setIsDragging] = useState(false);
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
 
+  // Fixed rotation speed for smooth animation
+  const ROTATION_SPEED = 0.5;
+
   useEffect(() => {
     let animationFrameId: number;
+    let lastTime = performance.now();
     
-    const animate = () => {
+    const animate = (currentTime: number) => {
+      const deltaTime = (currentTime - lastTime) / 1000; // Convert to seconds
+      lastTime = currentTime;
+
       if (isRotating && !isDragging) {
         setRotation(prev => ({
-          x: prev.x + rotationSpeed * 50,
-          y: prev.y + rotationSpeed * 50
+          x: prev.x + ROTATION_SPEED * deltaTime * 60, // 60 for smooth rotation at 60fps
+          y: prev.y + ROTATION_SPEED * deltaTime * 60
         }));
       }
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    animationFrameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [isRotating, rotationSpeed, isDragging]);
+  }, [isRotating, isDragging]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -53,12 +59,7 @@ export default function WebPageCube() {
     setIsDragging(false);
   };
 
-  const handleSpeedChange = (value: number[]) => {
-    setRotationSpeed(value[0] / 1000);
-  };
-
   const resetRotation = () => {
-    setRotationSpeed(0.001);
     setRotation({ x: 0, y: 0 });
     setPosition({ x: 0, y: 0 });
     setScale(1);
@@ -145,7 +146,7 @@ export default function WebPageCube() {
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-            <HCard importPath="../CardContent/Clock" />
+            <HCard importPath="../CardContent/Calculator" />
             </div>
           </div>
 
@@ -217,7 +218,6 @@ export default function WebPageCube() {
         isRotating={isRotating}
         onToggleRotation={() => setIsRotating(!isRotating)}
         onResetRotation={resetRotation}
-        onSpeedChange={handleSpeedChange}
         onMove={handleMove}
         onZoom={handleZoom}
       />

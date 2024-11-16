@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 
 interface CubeControlsProps {
   onToggleRotation: () => void;
   isRotating: boolean;
-  onSpeedChange: (value: number[]) => void;
   onMove: (direction: 'up' | 'down' | 'left' | 'right') => void;
   onZoom: (direction: 'in' | 'out') => void;
   onResetRotation: () => void;
@@ -14,7 +12,6 @@ interface CubeControlsProps {
 export default function CubeControls({
   onToggleRotation,
   isRotating,
-  onSpeedChange,
   onMove,
   onZoom,
   onResetRotation,
@@ -37,20 +34,6 @@ export default function CubeControls({
         >
           <RotateCcw className="h-4 w-4 text-white" />
         </Button>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-white">Rotation Speed</label>
-        <div className="w-48">
-          <Slider
-            defaultValue={[1]}
-            min={0}
-            max={10}
-            step={0.1}
-            onChange={onSpeedChange}
-            className="[&>span]:bg-white"
-          />
-        </div>
       </div>
 
       <div className="flex gap-2">
