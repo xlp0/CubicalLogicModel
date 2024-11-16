@@ -1,183 +1,153 @@
-# Cubical Logic Model
+# CubicalLogicModel
 
-An interactive 3D cube interface built with Astro and React, demonstrating the relationship between abstract specifications and concrete implementations in software development.
+A dynamic, interactive 3D web application built with Astro, React, and Three.js, featuring a responsive split-panel layout and dynamic component loading.
 
 ## 🚀 Features
 
-- Interactive 3D cube visualization
-- Real-time rotation controls
-- Zoom and movement functionality
-- Dynamic face content rendering
-- Smooth animations and transitions
-- High-contrast UI controls
-- Responsive design
+- Interactive 3D cube interface with dynamic face content
+- Responsive split-panel layout
+- Dynamic component loading system
+- Rich set of interactive components
+- Real-time 3D controls and animations
+- Modern, clean UI with Tailwind CSS
 
-## 🛠️ Technology Stack
+## 🛠️ Tech Stack
 
-- **Framework:** [Astro](https://astro.build/) with React integration
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **UI Components:** 
-  - Radix UI primitives
-  - Lucide React icons
-  - Custom React components
+- **Framework**: [Astro](https://astro.build/)
+- **UI Library**: [React](https://reactjs.org/)
+- **3D Graphics**: [Three.js](https://threejs.org/) with [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Layout**: [react-split](https://www.npmjs.com/package/react-split)
+- **Build Tool**: [Vite](https://vitejs.dev/)
 
-## 🏗️ Project Structure
+## 📁 Project Structure
 
 ```
 src/
 ├── components/
-│   ├── CardContent/           # Dynamically loadable cube face components
-│   │   ├── AbstractSpec.tsx   # Front face: Abstract specification view
-│   │   ├── Clock.tsx         # Back face: Real-time clock display
-│   │   ├── ConcreteImpl.tsx  # Right face: Implementation details
-│   │   ├── Counter.tsx       # Left face: Interactive counter
-│   │   ├── Notes.tsx         # Bottom face: Documentation view
-│   │   ├── README.md         # Component guidelines and documentation
-│   │   └── ...              # Other card components
-│   │
-│   └── WebPageCube/          # Core cube implementation
-│       ├── WebPageCube.tsx   # Main cube component and 3D logic
-│       ├── CubeControls.tsx  # UI controls for cube interaction
-│       ├── HCard.tsx         # Dynamic component loader
-│       └── ...              # Other cube-related components
-│
-├── pages/                    # Astro pages
-│   └── index.astro          # Main entry point
-│
-└── ...                      # Other project files
+│   ├── CardContent/           # Content components for cube faces
+│   │   ├── WebPageCube/      # 3D cube implementation
+│   │   │   ├── WebPageCube.tsx
+│   │   │   ├── CubeFace.tsx
+│   │   │   ├── CubeControls.tsx
+│   │   │   └── cubeConfig.ts
+│   │   ├── AbstractSpec.tsx
+│   │   ├── ConcreteImpl.tsx
+│   │   ├── RealisticExpectations.tsx
+│   │   ├── ThreeJsCube.tsx
+│   │   ├── SpotifyPlayer.tsx
+│   │   ├── YouTubePlayer.tsx
+│   │   └── ... (other content components)
+│   ├── SplitLayout/          # Layout components
+│   │   ├── SplitPane.tsx
+│   │   ├── SplitLayout.tsx
+│   │   └── LeftPanel.tsx
+│   ├── ui/                   # UI components
+│   │   ├── button.tsx
+│   │   ├── slider.tsx
+│   │   └── ... (other UI components)
+│   └── HCard.tsx             # Dynamic component loader
+├── layouts/
+│   └── Layout.astro          # Main layout template
+├── lib/
+│   └── utils.ts              # Utility functions
+└── pages/
+    └── index.astro           # Main entry point
 ```
 
-### Architectural Changes
+## 🔑 Key Components
 
-#### Component Organization
-
-We've made significant improvements to the project architecture by reorganizing the component structure:
-
-1. **Separation of Card Content**
-   - Moved from `WebPageCube/LocalContent` to root-level `components/CardContent`
-   - Better reflects the components' independent, reusable nature
-   - Makes components more discoverable and maintainable
-
-2. **HCard Evolution**
-   - Changed from a local component loader to a global dynamic content system
-   - Now accepts path-based imports for maximum flexibility
-   - Allows for easier addition of new card components without modifying HCard
-
-3. **Why We Eliminated LocalContent**
-   - **Improved Modularity**: Components are no longer tightly coupled to WebPageCube
-   - **Better Scalability**: Easier to add new components without cluttering the cube implementation
-   - **Enhanced Reusability**: Components can be used in other parts of the application
-   - **Clearer Dependencies**: Direct import paths make dependencies explicit
-   - **Simplified Development**: Clear separation between cube logic and content
-
-4. **Benefits of New Structure**
-   - **Cleaner Organization**: Clear separation between infrastructure and content
-   - **Better Developer Experience**: Easier to find and modify components
-   - **Improved Maintainability**: Each component can evolve independently
-   - **Future-Proof**: Ready for additional features and components
-
-### Component Guidelines
-
-Each cube face component should:
-1. Be self-contained and independently loadable
-2. Follow the 400x400px dimension standard (scaled down by 0.5 in the cube)
-3. Handle its own state and side effects
-4. Consider performance impact on cube rotation
-5. Implement proper loading and error states
-
-### Performance Considerations
-
-The new architecture improves performance through:
-1. Dynamic imports for code splitting
-2. Memoization of component instances
-3. Isolated re-renders
-4. Optimized state management
-
-### Future Extensibility
-
-This structure supports future enhancements such as:
-1. Additional cube face components
-2. Alternative card layouts
-3. Dynamic component marketplace
-4. Shared component state management
-5. Custom theming and styling systems
-
-## 🎮 Controls
-
-- **Rotation:** Toggle automatic rotation and adjust speed
-- **Manual Control:** Click and drag to rotate the cube
-- **Zoom:** Use zoom in/out buttons to adjust view
-- **Reset:** Return to default position and rotation
-
-## 🚦 Getting Started
-
-1. Clone the repository
-```bash
-git clone [repository-url]
-```
-
-2. Install dependencies
-```bash
-npm install
-```
-
-3. Start the development server
-```bash
-npm run dev
-```
-
-4. Build for production
-```bash
-npm run build
-```
-
-## 🎯 Core Concepts
-
-The cube represents the relationship between:
-- Abstract specifications (front/back faces)
-- Concrete implementations (left/right faces)
-- Realistic expectations (top/bottom faces)
-
-Each face demonstrates different aspects of software development methodology through interactive content.
-
-## 🧩 Components
+### HCard
+Dynamic component loader that handles lazy loading and error management for components.
 
 ### WebPageCube
-The main container component managing the 3D transformation and state.
+Interactive 3D cube interface with configurable faces and controls.
 
-### CubeFace
-A reusable component for rendering individual cube faces with proper positioning and rotation.
+### SplitPane
+Responsive split-panel layout manager with resizable panels.
 
-### CubeControls
-User interface for manipulating the cube's position, rotation, and scale.
+## 🚀 Getting Started
 
-## 📦 Dependencies
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-- @astrojs/react
-- @astrojs/tailwind
-- @radix-ui/react-slider
-- lucide-react
-- tailwindcss
-- typescript
+2. **Development**
+   ```bash
+   npm run dev
+   ```
+
+3. **Build**
+   ```bash
+   npm run build
+   ```
+
+## 🎮 Usage
+
+The application provides an interactive 3D cube interface with:
+- Drag controls for rotation
+- Zoom controls
+- Auto-rotation toggle
+- Dynamic content loading for each face
+- Resizable split panels
+
+## 🧩 Component System
+
+### Dynamic Loading
+Components are loaded dynamically using the `HCard` component:
+```tsx
+<HCard
+  importPath="WebPageCube/WebPageCube"
+  componentProps={{
+    title: "Interactive Web Cube",
+    frontComponent: "AbstractSpec",
+    backComponent: "RealisticExpectations",
+    // ... other face components
+  }}
+/>
+```
+
+### Cube Face Configuration
+Each cube face can be configured with different components:
+- Front: Abstract Specifications
+- Back: Realistic Expectations
+- Right: Concrete Implementation
+- Left: Spotify Player
+- Top: YouTube Player
+- Bottom: Interactive Counter
+
+## 🛡️ Error Handling
+
+The system includes comprehensive error handling:
+- Dynamic import error catching
+- Component loading fallbacks
+- Detailed error messages
+- Debug logging system
 
 ## 🎨 Styling
 
-The project uses Tailwind CSS with custom utilities for:
-- 3D transformations
-- Perspective handling
-- Responsive design
-- High-contrast UI elements
+- Tailwind CSS for utility-first styling
+- Consistent design system
+- Responsive layouts
+- Modern UI components
 
-## 🔧 Configuration
+## 🔧 Development
 
-- TypeScript configuration in `tsconfig.json`
-- Astro configuration in `astro.config.mjs`
-- Tailwind configuration in `tailwind.config.mjs`
+### Adding New Components
+1. Create component in `src/components/CardContent`
+2. Register in WebPageCube configuration
+3. Import dynamically using HCard
+
+### Modifying Cube Behavior
+Adjust cube parameters in `cubeConfig.ts`:
+- Rotation speed
+- Control sensitivity
+- Animation parameters
 
 ## 📝 License
 
-MIT License - feel free to use this project for learning and development purposes.
+MIT License - feel free to use this project for your own purposes.
 
 ## 🤝 Contributing
 
