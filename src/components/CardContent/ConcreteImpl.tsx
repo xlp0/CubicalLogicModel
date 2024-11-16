@@ -38,8 +38,7 @@ export default function ConcreteImpl() {
         </table>
         <Button
           onClick={clearFields}
-          variant="destructive"
-          className="w-full mt-4"
+          className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white transition-colors"
         >
           Reset to Default
         </Button>

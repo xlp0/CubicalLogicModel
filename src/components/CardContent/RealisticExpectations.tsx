@@ -4,44 +4,43 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 export default function RealisticExpectations() {
-  const [practicalBoundaries, setPracticalBoundaries] = useState("Define the system's limitations and realistic constraints for implementation.");
-  const [evaluationData, setEvaluationData] = useState("Collect relevant data to assess the effectiveness and performance of each feature.");
-  const [validatedCases, setValidatedCases] = useState("Identify successful case studies to validate functionality and use cases.");
+  const [practicalBoundaries, setPracticalBoundaries] = useState("Define system limitations and constraints.");
+  const [evaluationData, setEvaluationData] = useState("Collect data to assess performance.");
+  const [validatedCases, setValidatedCases] = useState("Identify successful case studies.");
 
   const clearFields = () => {
-    setPracticalBoundaries("Define the system's limitations and realistic constraints.");
-    setEvaluationData("Collect relevant data to assess the effectiveness.");
-    setValidatedCases("Identify successful case studies to validate functionality.");
+    setPracticalBoundaries("Define system limitations and constraints.");
+    setEvaluationData("Collect data to assess performance.");
+    setValidatedCases("Identify successful case studies.");
   };
 
   return (
-    <div className="h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-8">
-      <div className="w-full max-w-md bg-gray-700 rounded-xl p-4">
-        <div className="text-white text-center text-2xl mb-4">
+    <div className="h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-4">
+      <div className="w-full max-w-md bg-gray-700 rounded-lg p-3">
+        <div className="text-white text-center text-lg font-semibold mb-2">
           Realistic Expectations
         </div>
-        <table className="w-full text-left text-white">
-          <tbody>
+        <table className="w-full text-left text-white text-sm">
+          <tbody className="space-y-1">
             <tr>
-              <th className="p-2 bg-gray-800 rounded-lg">Practical Boundaries</th>
-              <td className="p-2 bg-gray-900 rounded-lg">{practicalBoundaries}</td>
+              <th className="p-1.5 bg-gray-800 rounded-lg text-xs font-medium">Boundaries</th>
+              <td className="p-1.5 bg-gray-900 rounded-lg text-xs">{practicalBoundaries}</td>
             </tr>
             <tr>
-              <th className="p-2 bg-gray-800 rounded-lg">Evaluation Data</th>
-              <td className="p-2 bg-gray-900 rounded-lg">{evaluationData}</td>
+              <th className="p-1.5 bg-gray-800 rounded-lg text-xs font-medium">Evaluation</th>
+              <td className="p-1.5 bg-gray-900 rounded-lg text-xs">{evaluationData}</td>
             </tr>
             <tr>
-              <th className="p-2 bg-gray-800 rounded-lg">Validated Cases</th>
-              <td className="p-2 bg-gray-900 rounded-lg">{validatedCases}</td>
+              <th className="p-1.5 bg-gray-800 rounded-lg text-xs font-medium">Validation</th>
+              <td className="p-1.5 bg-gray-900 rounded-lg text-xs">{validatedCases}</td>
             </tr>
           </tbody>
         </table>
         <Button
           onClick={clearFields}
-          variant="destructive"
-          className="w-full mt-4"
+          className="w-full mt-2 text-xs py-1 bg-red-600 hover:bg-red-700 text-white transition-colors"
         >
-          Reset to Default
+          Reset
         </Button>
       </div>
     </div>
