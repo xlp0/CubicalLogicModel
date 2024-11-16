@@ -20,9 +20,9 @@ export default function SplitPane() {
             importPath="WebPageCube/WebPageCube"
             componentProps={{
               title: "Interactive Web Cube",
-              frontComponent: "AbstractSpec",
+              frontComponent: "Dashboard",
               backComponent: "RealisticExpectations",
-              rightComponent: "ConcreteImpl",
+              rightComponent: "Calculator",
               leftComponent: "SpotifyPlayer",
               topComponent: "YouTubePlayer",
               bottomComponent: "Counter"
@@ -31,7 +31,7 @@ export default function SplitPane() {
         </div>
         <div className="h-full overflow-hidden">
           <HCard
-            importPath="ThreeJsCube"
+            importPath="Dashboard"
             componentProps={{
               title: "A 3D View"
             }}

@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Split from 'react-split';
 import WebPageCube from '../components/WebPageCube/WebPageCube';
 import ThreeJsCube from '../components/CardContent/ThreeJsCube';
+import Dashboard from '../components/CardContent/Dashboard';
+
 ---
 
 <Layout title="Cubical Logic Model">
@@ -12,7 +14,7 @@ import ThreeJsCube from '../components/CardContent/ThreeJsCube';
         <WebPageCube client:only="react" />
       </div>
       <div class="split-item">
-        <ThreeJsCube client:only="react" />
+        <Dashboard client:only="react" />
       </div>
       <div class="gutter"></div>
     </div>
