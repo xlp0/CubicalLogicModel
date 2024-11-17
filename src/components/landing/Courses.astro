@@ -1,15 +1,6 @@
 ---
 import CourseCard from '../CardContent/CourseCard.astro';
-import { readFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-
-// Helper function to read SVG files
-async function readSvgFile(filename: string) {
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const filePath = path.join(__dirname, '../../../public/icons', filename);
-  return await readFile(filePath, 'utf-8');
-}
+import { readSvgFile } from '../../utils/svg';
 
 const courses = [
   {
