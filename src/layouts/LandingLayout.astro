@@ -1,0 +1,101 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Interactive learning platform">
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	</head>
+	<body class="font-sans antialiased">
+		<header class="fixed w-full bg-white/90 backdrop-blur-sm z-50 border-b border-gray-200">
+			<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex justify-between h-16">
+					<div class="flex items-center">
+						<a href="/" class="text-xl font-bold text-gray-900">
+							CLM
+						</a>
+					</div>
+					<div class="flex items-center space-x-8">
+						<a href="#features" class="text-gray-600 hover:text-gray-900">Features</a>
+						<a href="#courses" class="text-gray-600 hover:text-gray-900">Courses</a>
+						<a href="#about" class="text-gray-600 hover:text-gray-900">About</a>
+						<a href="/cubical-model" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+							Get Started
+						</a>
+					</div>
+				</div>
+			</nav>
+		</header>
+
+		<slot />
+
+		<footer class="bg-gray-900 text-white py-12">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+					<div>
+						<h3 class="text-lg font-semibold mb-4">CLM</h3>
+						<p class="text-gray-400">Exploring complex concepts through interactive 3D visualization.</p>
+					</div>
+					<div>
+						<h3 class="text-lg font-semibold mb-4">Resources</h3>
+						<ul class="space-y-2 text-gray-400">
+							<li><a href="#" class="hover:text-white">Documentation</a></li>
+							<li><a href="#" class="hover:text-white">Tutorials</a></li>
+							<li><a href="#" class="hover:text-white">Blog</a></li>
+						</ul>
+					</div>
+					<div>
+						<h3 class="text-lg font-semibold mb-4">Company</h3>
+						<ul class="space-y-2 text-gray-400">
+							<li><a href="#" class="hover:text-white">About Us</a></li>
+							<li><a href="#" class="hover:text-white">Careers</a></li>
+							<li><a href="#" class="hover:text-white">Contact</a></li>
+						</ul>
+					</div>
+					<div>
+						<h3 class="text-lg font-semibold mb-4">Legal</h3>
+						<ul class="space-y-2 text-gray-400">
+							<li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+							<li><a href="#" class="hover:text-white">Terms of Service</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+					<p>&copy; 2024 CLM. All rights reserved.</p>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>
+
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), rgb(var(--accent-light)) 30%, white 60%);
+	}
+	html {
+		font-family: 'Inter', system-ui, sans-serif;
+		background: #fff;
+		scroll-behavior: smooth;
+	}
+	body {
+		margin: 0;
+	}
+	code {
+		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+			Bitstream Vera Sans Mono, Courier New, monospace;
+	}
+</style>

@@ -1,21 +1,24 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import LandingLayout from '../layouts/LandingLayout.astro';
 import Hero from '../components/landing/Hero.astro';
 import Features from '../components/landing/Features.astro';
+import Courses from '../components/landing/Courses.astro';
 ---
 
-<Layout title="Cubical Logic Model - Interactive 3D Learning Platform">
+<LandingLayout title="CLM - Interactive Learning Platform">
 	<main>
 		<Hero 
-			title="Experience Logic in 3D"
-			subtitle="Explore complex logical concepts through an interactive 3D interface inspired by Leibniz's Monadology"
+			title="Learn Logic Through Interactive 3D"
+			subtitle="Experience a revolutionary approach to understanding logical concepts through our innovative 3D visualization platform"
 		/>
 		<Features />
+		<Courses />
 	</main>
-</Layout>
+</LandingLayout>
 
 <style>
 	main {
 		width: 100%;
+		padding-top: 4rem;
 	}
 </style>
