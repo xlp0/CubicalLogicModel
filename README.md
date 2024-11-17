@@ -46,7 +46,7 @@ src/
 │   │   ├── button.tsx
 │   │   ├── slider.tsx
 │   │   └── ... (other UI components)
-│   └── HCard.tsx             # Dynamic component loader
+│   └── MCard.tsx             # Dynamic component loader inspired by Leibniz's Monadology
 ├── layouts/
 │   └── Layout.astro          # Main layout template
 ├── lib/
@@ -57,8 +57,8 @@ src/
 
 ## 🔑 Key Components
 
-### HCard
-Dynamic component loader that handles lazy loading and error management for components.
+### MCard
+Dynamic component loader inspired by Leibniz's concept of Monads from his work "Monadology". Like Monads, which are self-contained units that reflect the entire universe, MCard components encapsulate their own state and behavior while being part of a larger interconnected system. This architectural choice enables seamless dynamic loading and error management for components.
 
 ### WebPageCube
 Interactive 3D cube interface with configurable faces and controls.
@@ -95,9 +95,9 @@ The application provides an interactive 3D cube interface with:
 ## 🧩 Component System
 
 ### Dynamic Loading
-Components are loaded dynamically using the `HCard` component:
+Components are loaded dynamically using the `MCard` component:
 ```tsx
-<HCard
+<MCard
   importPath="WebPageCube/WebPageCube"
   componentProps={{
     title: "Interactive Web Cube",
@@ -137,7 +137,7 @@ The system includes comprehensive error handling:
 ### Adding New Components
 1. Create component in `src/components/CardContent`
 2. Register in WebPageCube configuration
-3. Import dynamically using HCard
+3. Import dynamically using MCard
 
 ### Modifying Cube Behavior
 Adjust cube parameters in `cubeConfig.ts`:
