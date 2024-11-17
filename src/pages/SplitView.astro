@@ -12,12 +12,28 @@ const panes = [
     }
   },
   {
-    importPath: "ThreeJsCube",
     width: "auto",
-    minWidth: "300px",
+    minWidth: "400px",
     flex: 2,
-    componentProps: {
-      title: "3D Visualization"
+    split: {
+      direction: 'horizontal',
+      sizes: [50, 50],
+      panes: [
+        {
+          importPath: "ThreeJsCube",
+          minWidth: "300px",
+          componentProps: {
+            title: "3D View Top"
+          }
+        },
+        {
+          importPath: "ThreeJsCube",
+          minWidth: "300px",
+          componentProps: {
+            title: "3D View Bottom"
+          }
+        }
+      ]
     }
   },
   {
