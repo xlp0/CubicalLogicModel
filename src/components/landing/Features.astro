@@ -1,0 +1,54 @@
+---
+const features = [
+  {
+    title: "Interactive 3D Learning",
+    description: "Explore complex concepts through an interactive 3D cube interface that brings abstract ideas to life.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+    </svg>`
+  },
+  {
+    title: "Dynamic Content Loading",
+    description: "Experience seamless content transitions with our Monad-inspired component architecture.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+    </svg>`
+  },
+  {
+    title: "Split-View Interface",
+    description: "Customize your learning environment with resizable panels for optimal content organization.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+    </svg>`
+  }
+];
+---
+
+<section class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">
+        Modern Learning Experience
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Discover a new way of understanding complex concepts through our innovative 3D interface and dynamic content delivery system.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {features.map(feature => (
+        <div class="bg-white rounded-lg shadow-lg p-8 transform hover:-translate-y-1 transition-all duration-200">
+          <div class="text-blue-600 mb-4 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <Fragment set:html={feature.icon} />
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">
+            {feature.title}
+          </h3>
+          <p class="text-gray-600">
+            {feature.description}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

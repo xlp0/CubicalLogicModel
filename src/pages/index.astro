@@ -1,65 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Split from 'react-split';
-import WebPageCube from '../components/WebPageCube/WebPageCube';
-import ThreeJsCube from '../components/CardContent/ThreeJsCube';
-import Dashboard from '../components/CardContent/Dashboard';
-
+import Hero from '../components/landing/Hero.astro';
+import Features from '../components/landing/Features.astro';
 ---
 
-<Layout title="Cubical Logic Model">
-  <div class="split-container">
-    <div class="split">
-      <div class="split-item">
-        <WebPageCube client:only="react" />
-      </div>
-      <div class="split-item">
-        <Dashboard client:only="react" />
-      </div>
-      <div class="gutter"></div>
-    </div>
-  </div>
+<Layout title="Cubical Logic Model - Interactive 3D Learning Platform">
+	<main>
+		<Hero 
+			title="Experience Logic in 3D"
+			subtitle="Explore complex logical concepts through an interactive 3D interface inspired by Leibniz's Monadology"
+		/>
+		<Features />
+	</main>
 </Layout>
 
 <style>
-  .split-container {
-    height: 100vh;
-    width: 100vw;
-  }
-
-  .split {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-  }
-
-  .split-item {
-    flex: 1;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .gutter {
-    background-color: #4a5568;
-    cursor: col-resize;
-    width: 4px;
-  }
-
-  .gutter:hover {
-    background-color: #718096;
-  }
+	main {
+		width: 100%;
+	}
 </style>
-
-<script>
-  import Split from 'react-split';
-  
-  document.addEventListener('DOMContentLoaded', () => {
-    Split({
-      columnGutters: [{
-        track: 1,
-        element: document.querySelector('.gutter') as HTMLElement,
-      }],
-      minSize: 300,
-    });
-  });
-</script>
