@@ -1,4 +1,6 @@
 ---
+import MCard from './MCard/MCard.astro';
+
 const features = [
   {
     title: "Interactive 3D Learning",
@@ -37,17 +39,11 @@ const features = [
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       {features.map(feature => (
-        <div class="bg-white rounded-lg shadow-lg p-8 transform hover:-translate-y-1 transition-all duration-200">
-          <div class="text-blue-600 mb-4 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-            <Fragment set:html={feature.icon} />
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2">
-            {feature.title}
-          </h3>
-          <p class="text-gray-600">
-            {feature.description}
-          </p>
-        </div>
+        <MCard
+          icon={feature.icon}
+          title={feature.title}
+          description={feature.description}
+        />
       ))}
     </div>
   </div>
