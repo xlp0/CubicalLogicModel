@@ -1,16 +1,48 @@
 'use client';
 
 import React, { Suspense, lazy, useMemo } from 'react';
+import type { FC, ComponentProps } from 'react';
 
 interface MCardProps {
-  importPath: string;
-  componentProps?: Record<string, any>;
+  importPath?: string;
+  defaultContent?: FC<any>;
+  componentProps?: ComponentProps<any>;
 }
 
-const MCard: React.FC<MCardProps> = ({ importPath, componentProps = {} }) => {
-  // Memoize the lazy component to prevent re-creation
+const MCard: FC<MCardProps> = ({ importPath, defaultContent, componentProps = {} }) => {
+  console.log('MCard rendering with props:', { importPath, hasDefaultContent: !!defaultContent, componentProps });
+
+  const LoadingFallback = () => (
+    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20">
+      <div className="animate-pulse text-white/50">Loading...</div>
+    </div>
+  );
+
+  // If defaultContent is provided, use it directly
+  if (defaultContent) {
+    const DefaultComponent = defaultContent;
+    return (
+      <div className="h-full w-full">
+        <Suspense fallback={<LoadingFallback />}>
+          <DefaultComponent {...componentProps} />
+        </Suspense>
+      </div>
+    );
+  }
+
+  // Otherwise, use dynamic import
   const Component = useMemo(() => 
     lazy(async () => {
+      if (!importPath) {
+        return {
+          default: () => (
+            <div className="p-4 bg-yellow-500/10 rounded-lg text-yellow-500">
+              No component specified
+            </div>
+          )
+        };
+      }
+
       try {
         console.log('Attempting to import:', importPath);
         // Use dynamic import with full path
@@ -34,11 +66,7 @@ const MCard: React.FC<MCardProps> = ({ importPath, componentProps = {} }) => {
 
   return (
     <div className="h-full w-full">
-      <Suspense fallback={
-        <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20">
-          <div className="animate-pulse text-white/50">Loading...</div>
-        </div>
-      }>
+      <Suspense fallback={<LoadingFallback />}>
         <Component {...componentProps} />
       </Suspense>
     </div>

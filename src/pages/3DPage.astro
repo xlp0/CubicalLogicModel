@@ -1,0 +1,18 @@
+---
+import SingleCardLayout from '../layouts/SingleCardLayout.astro';
+
+// Add debug logging
+console.log('[3DPage] Imports loaded:', { 
+  hasThreeJsCube: false,
+  threeJsCubeType: undefined
+});
+
+---
+
+<SingleCardLayout 
+  title="3D Visualization" 
+  importPath="ThreeJsCube"
+  componentProps={{
+    title: "Interactive 3D Cube"
+  }}
+/>

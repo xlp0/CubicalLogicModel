@@ -1,0 +1,120 @@
+{
+  "cards": [
+    {
+      "importPath": "ThreeJsCube",
+      "componentProps": {
+        "title": "3D Visualization Demo"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "YouTubePlayer",
+      "componentProps": {
+        "title": "Cubical Type Theory",
+        "videoId": "LWQqE2JcDSQ"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "Calculator",
+      "componentProps": {
+        "title": "Interactive Calculator"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "Notes",
+      "componentProps": {
+        "title": "Real-time Clock"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "ThreeJsCube",
+      "componentProps": {
+        "title": "3D Visualization Demo"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "YouTubePlayer",
+      "componentProps": {
+        "title": "Python vs Rust vs C++ Speed Comparison",
+        "videoId": "wGUk3LiidQk"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "Counter",
+      "componentProps": {
+        "title": "Interactive Calculator"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "TodoList",
+      "componentProps": {
+        "title": "Real-time Clock"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "SpotifyPlayer",
+      "componentProps": {
+        "title": "Never Gonna Give You Up"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "YouTubePlayer",
+      "componentProps": {
+        "title": "AI Scaling Hits Wall, Rumours Say. How Serious is it?",
+        "videoId": "AqwSZEQkknU"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "Calculator",
+      "componentProps": {
+        "title": "Interactive Calculator"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "Clock",
+      "componentProps": {
+        "title": "Real-time Clock"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "ThreeJsCube",
+      "componentProps": {
+        "title": "3D Visualization Demo"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "YouTubePlayer",
+      "componentProps": {
+        "title": "NVIDIA CEO Jensen Huang Leaves Everyone SPEECHLESS",
+        "videoId": "JmpBqphgNhc"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "Calculator",
+      "componentProps": {
+        "title": "Interactive Calculator"
+      },
+      "height": "400px"
+    },
+    {
+      "importPath": "Dashboard",
+      "componentProps": {
+        "title": "Space Age Dashboard"
+      },
+      "height": "400px"
+    }
+  ]
+}

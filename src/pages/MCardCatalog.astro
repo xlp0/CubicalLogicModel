@@ -1,0 +1,15 @@
+---
+import ManyCardLayout from '../layouts/ManyCardLayout.astro';
+import selectedCards from '../data/SelectedCards.json';
+
+// Add debug logging
+console.log('MCardCatalog loading with cards:', selectedCards.cards);
+
+---
+
+<ManyCardLayout 
+  title="Model Card Library" 
+  cards={selectedCards.cards}
+  columns={5}
+  gap={2}
+/>

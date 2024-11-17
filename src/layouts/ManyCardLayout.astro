@@ -1,0 +1,129 @@
+---
+import type { FC } from 'react';
+import MCard from '../components/MCard';
+
+interface CardConfig {
+  importPath: string;
+  componentProps?: Record<string, any>;
+  width?: string;
+  height?: string;
+}
+
+export interface Props {
+  title: string;
+  cards: CardConfig[];
+  columns?: number;
+  gap?: number;
+}
+
+const { 
+  title, 
+  cards,
+  columns = 3,
+  gap = 6
+} = Astro.props;
+
+// Add debug logging
+console.log('ManyCardLayout rendering with props:', { 
+  title,
+  totalCards: cards.length,
+  columns,
+  gap
+});
+
+// Generate responsive grid classes
+const gridClasses = [
+  'grid',
+  'gap-' + gap,
+  'grid-cols-' + columns,
+].filter(Boolean).join(' ');
+---
+
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={title} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      html, body { height: 100%; margin: 0; padding: 0; }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(var(--columns), 1fr);
+        gap: var(--gap);
+        padding: 1rem;
+      }
+
+      .card-container {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        transition: transform 0.2s;
+      }
+
+      .card-container:hover {
+        transform: scale(1.02);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gray-100 m-0">
+    <main class="container mx-auto py-8">
+      <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">{title}</h1>
+      
+      <div 
+        class="grid-container"
+        style={`--columns: ${columns}; --gap: ${gap}rem;`}
+      >
+        {cards.map((card, index) => (
+          <div 
+            class="card-container"
+            style={`height: ${card.height || '400px'};`}
+          >
+            <MCard 
+              client:only="react"
+              importPath={card.importPath}
+              componentProps={card.componentProps}
+            />
+          </div>
+        ))}
+      </div>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color-scheme: light;
+  }
+  
+  html {
+    font-family: system-ui, sans-serif;
+  }
+
+  /* Custom scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #666;
+  }
+</style>
+
+<script>
+  console.log('ManyCardLayout mounted');
+</script>

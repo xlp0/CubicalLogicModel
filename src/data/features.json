@@ -3,17 +3,20 @@
     {
       "title": "Interactive 3D Learning",
       "description": "Explore complex concepts through an interactive 3D cube interface that brings abstract ideas to life.",
-      "iconFile": "3d-cube.svg"
+      "iconFile": "3d-cube.svg",
+      "href": "/3DPage"
     },
     {
-      "title": "Dynamic Content Loading",
+      "title": "MCard Catalog",
       "description": "Experience seamless content transitions with our Monad-inspired component architecture.",
-      "iconFile": "dynamic-loading.svg"
+      "iconFile": "dynamic-loading.svg",
+      "href": "/MCardCatalog"
     },
     {
       "title": "Split-View Interface",
       "description": "Customize your learning environment with resizable panels for optimal content organization.",
-      "iconFile": "split-view.svg"
+      "iconFile": "split-view.svg",
+      "href": "/SplitView"
     }
   ]
 }

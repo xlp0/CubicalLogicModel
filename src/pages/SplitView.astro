@@ -1,0 +1,39 @@
+---
+import SplitViewLayout from '../layouts/SplitViewLayout.astro';
+
+const panes = [
+  {
+    importPath: "TreeView",
+    width: "250px",
+    minWidth: "200px",
+    flex: 0,
+    componentProps: {
+      title: "Project Explorer"
+    }
+  },
+  {
+    importPath: "ThreeJsCube",
+    width: "auto",
+    minWidth: "300px",
+    flex: 2,
+    componentProps: {
+      title: "3D Visualization"
+    }
+  },
+  {
+    importPath: "YouTubePlayer",
+    width: "400px",
+    minWidth: "300px",
+    flex: 1,
+    componentProps: {
+      title: "Tutorial",
+      videoId: "LWQqE2JcDSQ"
+    }
+  }
+];
+---
+
+<SplitViewLayout 
+  title="Split View" 
+  panes={panes}
+/>

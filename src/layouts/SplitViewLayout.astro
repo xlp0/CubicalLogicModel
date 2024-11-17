@@ -1,0 +1,276 @@
+---
+import type { FC } from 'react';
+import MCard from '../components/MCard';
+
+interface PaneConfig {
+  importPath: string;
+  componentProps?: Record<string, any>;
+  width?: string;
+  minWidth?: string;
+  flex?: number;
+}
+
+export interface Props {
+  title: string;
+  panes: PaneConfig[];
+}
+
+const { title, panes } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={title} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      html, body { 
+        height: 100%; 
+        margin: 0; 
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .split-container {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      .pane {
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        background: #1a1a1a;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .pane-content {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .resizer {
+        width: 18px;
+        margin: 0 -9px;
+        cursor: col-resize;
+        background: transparent;
+        position: relative;
+        z-index: 100;
+      }
+
+      .resizer::before {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: #333;
+        transition: background 0.2s, width 0.2s;
+      }
+
+      .resizer:hover::before,
+      .resizer.resizing::before {
+        background: #666;
+        width: 6px;
+      }
+
+      .resizer::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
+
+      .resizing {
+        pointer-events: none;
+      }
+
+      .resizing * {
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body class="h-full bg-gray-900 m-0 overflow-hidden">
+    <div class="split-container">
+      {panes.map((pane, index) => (
+        <>
+          <div 
+            class="pane"
+            data-index={index}
+            style={`
+              width: ${pane.width || '300px'};
+              min-width: ${pane.minWidth || '200px'};
+              flex: ${index === panes.length - 1 ? '1 1 auto' : '0 0 auto'};
+            `}
+          >
+            <div class="pane-content">
+              <MCard 
+                client:only="react"
+                importPath={pane.importPath}
+                componentProps={pane.componentProps}
+              />
+            </div>
+          </div>
+          {index < panes.length - 1 && <div class="resizer" data-index={index} />}
+        </>
+      ))}
+    </div>
+
+    <script>
+      function initializeResizers() {
+        const container = document.querySelector('.split-container');
+        const panes = Array.from(document.querySelectorAll('.pane'));
+        const resizers = Array.from(document.querySelectorAll('.resizer'));
+        
+        let isResizing = false;
+        let activeResizer = null;
+        let startX = 0;
+        let startWidths = null;
+
+        function onMouseDown(e) {
+          const resizer = e.target.closest('.resizer');
+          if (!resizer) return;
+
+          // Prevent any ongoing resize operation
+          if (isResizing) {
+            onMouseUp();
+          }
+
+          isResizing = true;
+          activeResizer = resizer;
+          startX = e.clientX;
+          
+          // Store starting widths
+          startWidths = panes.map(pane => pane.getBoundingClientRect().width);
+          
+          // Add resizing class to container
+          container.classList.add('resizing');
+          activeResizer.classList.add('resizing');
+          
+          // Add event listeners
+          document.addEventListener('mousemove', onMouseMove);
+          document.addEventListener('mouseup', onMouseUp);
+          
+          // Prevent text selection
+          e.preventDefault();
+        }
+
+        function onMouseMove(e) {
+          if (!isResizing || !activeResizer || !startWidths) return;
+
+          const index = parseInt(activeResizer.dataset.index);
+          const leftPane = panes[index];
+          const rightPane = panes[index + 1];
+          
+          if (!leftPane || !rightPane) return;
+
+          const dx = e.clientX - startX;
+          const leftMinWidth = parseInt(leftPane.style.minWidth) || 200;
+          const rightMinWidth = parseInt(rightPane.style.minWidth) || 200;
+          
+          // Calculate new widths
+          let newLeftWidth = Math.max(leftMinWidth, startWidths[index] + dx);
+          let newRightWidth = Math.max(rightMinWidth, startWidths[index + 1] - dx);
+          
+          // Check total available width
+          const totalWidth = startWidths[index] + startWidths[index + 1];
+          
+          // Adjust widths if they exceed total available space
+          if (newLeftWidth + newRightWidth > totalWidth) {
+            if (dx > 0) {
+              newLeftWidth = Math.min(newLeftWidth, totalWidth - rightMinWidth);
+              newRightWidth = totalWidth - newLeftWidth;
+            } else {
+              newRightWidth = Math.min(newRightWidth, totalWidth - leftMinWidth);
+              newLeftWidth = totalWidth - newRightWidth;
+            }
+          }
+
+          // Apply new widths if they're valid
+          if (newLeftWidth >= leftMinWidth && newRightWidth >= rightMinWidth) {
+            leftPane.style.width = `${newLeftWidth}px`;
+            leftPane.style.flex = '0 0 auto';
+
+            if (index === panes.length - 2) {
+              rightPane.style.flex = '1 1 auto';
+              rightPane.style.width = 'auto';
+            } else {
+              rightPane.style.width = `${newRightWidth}px`;
+              rightPane.style.flex = '0 0 auto';
+            }
+          }
+        }
+
+        function onMouseUp() {
+          if (!isResizing) return;
+
+          // Clean up
+          isResizing = false;
+          startWidths = null;
+          
+          if (activeResizer) {
+            activeResizer.classList.remove('resizing');
+            activeResizer = null;
+          }
+          
+          container.classList.remove('resizing');
+          
+          // Remove event listeners
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        // Add mousedown listeners to resizers
+        resizers.forEach(resizer => {
+          resizer.addEventListener('mousedown', onMouseDown);
+        });
+
+        // Clean up on window blur
+        window.addEventListener('blur', onMouseUp);
+        
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          // Debounce resize handler
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            const containerWidth = container.offsetWidth;
+            let availableWidth = containerWidth;
+            
+            // Reset all panes to minimum width if space is too constrained
+            panes.forEach((pane, index) => {
+              if (index === panes.length - 1) {
+                pane.style.flex = '1 1 auto';
+                pane.style.width = 'auto';
+              } else {
+                const minWidth = parseInt(pane.style.minWidth) || 200;
+                pane.style.width = `${minWidth}px`;
+                pane.style.flex = '0 0 auto';
+                availableWidth -= minWidth;
+              }
+            });
+          }, 100);
+        });
+      }
+
+      // Initialize resizers after the DOM is loaded
+      document.addEventListener('DOMContentLoaded', initializeResizers);
+    </script>
+  </body>
+</html>

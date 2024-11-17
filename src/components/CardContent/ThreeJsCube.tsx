@@ -1,12 +1,10 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import React, { useState, useRef } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import ThreeJsControls from './ThreeJsControls';
-import { Button } from '@/components/ui/button';
-import { Play, Pause } from 'lucide-react';
 
 interface CubeProps {
   isRotating: boolean;
@@ -50,6 +48,41 @@ function MiniCube({ isRotating }: CubeProps) {
   );
 }
 
+function Scene({ isRotating, controlsRef }: { isRotating: boolean; controlsRef: React.RefObject<any> }) {
+  const { camera } = useThree();
+  const initialCameraPosition = new THREE.Vector3(2, 2, 2);
+
+  // Reset camera position on mount
+  React.useEffect(() => {
+    camera.position.copy(initialCameraPosition);
+    camera.lookAt(0, 0, 0);
+  }, [camera]);
+
+  return (
+    <>
+      <color attach="background" args={['#000000']} />
+      
+      {/* Lighting */}
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
+      <directionalLight position={[-5, -5, -5]} intensity={0.2} />
+      
+      {/* Scene Content */}
+      <CoordinateSystem />
+      <MiniCube isRotating={isRotating} />
+
+      {/* Controls */}
+      <OrbitControls 
+        ref={controlsRef}
+        enableDamping
+        dampingFactor={0.05}
+        minDistance={1}
+        maxDistance={10}
+      />
+    </>
+  );
+}
+
 interface ThreeJsCubeProps {
   title?: string;
 }
@@ -58,96 +91,60 @@ const ThreeJsCube: React.FC<ThreeJsCubeProps> = ({
   title = "3D Coordinate System"
 }) => {
   const [isRotating, setIsRotating] = useState(true);
-  const [canvasHeight, setCanvasHeight] = useState(0);
   const controlsRef = useRef<any>(null);
-
-  useEffect(() => {
-    setCanvasHeight(window.innerHeight - 200); // Adjust for header and controls
-    
-    const handleResize = () => {
-      setCanvasHeight(window.innerHeight - 200);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleResetView = () => {
     if (controlsRef.current) {
       controlsRef.current.reset();
+      controlsRef.current.setAzimuthalAngle(0);
+      controlsRef.current.setPolarAngle(Math.PI / 4);
+      controlsRef.current.object.position.set(2, 2, 2);
+      controlsRef.current.target.set(0, 0, 0);
+      controlsRef.current.update();
     }
   };
 
   const handleZoom = (direction: 'in' | 'out') => {
     if (controlsRef.current) {
-      const delta = direction === 'in' ? -1 : 1;
-      controlsRef.current.dollyTo(
-        controlsRef.current.getDistance() * (1 + delta * 0.1),
-        true
-      );
+      const zoomSpeed = 0.5;
+      const camera = controlsRef.current.object;
+      const distance = camera.position.distanceTo(controlsRef.current.target);
+      const factor = direction === 'in' ? (1 - zoomSpeed) : (1 + zoomSpeed);
+      const newDistance = Math.min(Math.max(distance * factor, 1), 10);
+      
+      // Scale the camera position to maintain direction but change distance
+      const dir = camera.position.clone().sub(controlsRef.current.target).normalize();
+      camera.position.copy(dir.multiplyScalar(newDistance).add(controlsRef.current.target));
+      controlsRef.current.update();
     }
   };
 
-  if (canvasHeight === 0) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-900">
-        <div className="text-white text-xl">Loading 3D Scene...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative flex flex-col items-center justify-center w-full h-screen bg-gray-900">
-      <div className="absolute top-4 w-full text-center z-10">
+    <div className="flex flex-col w-full h-full bg-gray-900">
+      <div className="text-center py-2">
         <h2 className="text-white text-xl font-semibold">{title}</h2>
       </div>
       
-      <div 
-        className="flex-grow flex items-center justify-center w-full relative"
-        style={{ height: `${canvasHeight}px` }}
-      >
+      <div className="flex-grow relative">
         <Canvas 
           shadows
           camera={{ 
-            position: [2, 2, 2],
             fov: 50,
             near: 0.1,
             far: 1000
           }}
-          className="w-full max-w-[800px] h-full"
+          className="w-full h-full"
         >
-          <color attach="background" args={['#000000']} />
-          
-          {/* Lighting */}
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-          <directionalLight position={[-5, -5, -5]} intensity={0.2} />
-          
-          {/* Scene Content */}
-          <CoordinateSystem />
-          <MiniCube isRotating={isRotating} />
-          
-          {/* Controls */}
-          <OrbitControls 
-            ref={controlsRef}
-            enableZoom={true}
-            minDistance={1}
-            maxDistance={10}
-            minPolarAngle={Math.PI / 6}
-            maxPolarAngle={Math.PI * 5 / 6}
-            target={[0, 0, 0]}
-            enableDamping
-            dampingFactor={0.05}
-          />
+          <Scene isRotating={isRotating} controlsRef={controlsRef} />
         </Canvas>
+
+        <ThreeJsControls 
+          isRotating={isRotating}
+          onToggleRotation={() => setIsRotating(!isRotating)}
+          onResetView={handleResetView}
+          onZoom={handleZoom}
+        />
       </div>
-      
-      <ThreeJsControls
-        isRotating={isRotating}
-        onToggleRotation={() => setIsRotating(!isRotating)}
-        onResetView={handleResetView}
-        onZoom={handleZoom}
-      />
     </div>
   );
 };
