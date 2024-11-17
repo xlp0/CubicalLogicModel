@@ -1,8 +1,14 @@
 ---
 import FeatureCard from '../CardContent/FeatureCard.astro';
-import { getFeatures } from '../../data/features';
+import { readSvgFile } from '../../utils/svg';
+import featuresData from '../../data/features.json';
 
-const features = await getFeatures();
+const features = await Promise.all(
+  featuresData.features.map(async (feature) => ({
+    ...feature,
+    icon: await readSvgFile(feature.iconFile)
+  }))
+);
 ---
 
 <section class="py-20 bg-gray-50">

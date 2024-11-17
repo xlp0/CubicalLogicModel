@@ -1,8 +1,14 @@
 ---
 import CourseCard from '../CardContent/CourseCard.astro';
-import { getCourses } from '../../data/courses';
+import { readSvgFile } from '../../utils/svg';
+import coursesData from '../../data/courses.json';
 
-const courses = await getCourses();
+const courses = await Promise.all(
+  coursesData.courses.map(async (course) => ({
+    ...course,
+    icon: await readSvgFile(course.iconFile)
+  }))
+);
 ---
 
 <section id="courses" class="py-20">

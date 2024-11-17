@@ -1,0 +1,25 @@
+{
+  "courses": [
+    {
+      "title": "Cubical Logic Model",
+      "description": "Explore logical concepts through an interactive 3D interface inspired by Leibniz's Monadology.",
+      "iconFile": "cubical-logic.svg",
+      "link": "/cubical-model",
+      "featured": true
+    },
+    {
+      "title": "Introduction to Logic",
+      "description": "Learn the fundamentals of logical reasoning and argumentation.",
+      "iconFile": "intro-logic.svg",
+      "link": "#",
+      "coming": true
+    },
+    {
+      "title": "Advanced Topics",
+      "description": "Dive deep into advanced logical concepts and their applications.",
+      "iconFile": "advanced-topics.svg",
+      "link": "#",
+      "coming": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "features": [
+    {
+      "title": "Interactive 3D Learning",
+      "description": "Explore complex concepts through an interactive 3D cube interface that brings abstract ideas to life.",
+      "iconFile": "3d-cube.svg"
+    },
+    {
+      "title": "Dynamic Content Loading",
+      "description": "Experience seamless content transitions with our Monad-inspired component architecture.",
+      "iconFile": "dynamic-loading.svg"
+    },
+    {
+      "title": "Split-View Interface",
+      "description": "Customize your learning environment with resizable panels for optimal content organization.",
+      "iconFile": "split-view.svg"
+    }
+  ]
+}
