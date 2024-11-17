@@ -1,5 +1,5 @@
 ---
-import MCard from './MCard/MCard.astro';
+import FeatureCard from './FeatureCard.astro';
 
 const features = [
   {
@@ -39,7 +39,7 @@ const features = [
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       {features.map(feature => (
-        <MCard
+        <FeatureCard
           icon={feature.icon}
           title={feature.title}
           description={feature.description}
