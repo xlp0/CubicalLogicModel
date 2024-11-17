@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Split from 'react-split';
-import HCard from '../HCard';
+import MCard from '../MCard';
 
 export default function SplitPane() {
   return (
@@ -16,7 +16,7 @@ export default function SplitPane() {
         dragInterval={1}
       >
         <div className="h-full overflow-hidden">
-          <HCard
+          <MCard
             importPath="WebPageCube/WebPageCube"
             componentProps={{
               title: "Interactive Web Cube",
@@ -30,7 +30,7 @@ export default function SplitPane() {
           />
         </div>
         <div className="h-full overflow-hidden">
-          <HCard
+          <MCard
             importPath="Dashboard"
             componentProps={{
               title: "A 3D View"

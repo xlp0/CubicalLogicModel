@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import CubeControls from "./CubeControls";
-import HCard from "../../HCard";
+import MCard from "../../MCard";
 import * as THREE from 'three';
 
 interface WebPageCubeProps {
@@ -147,7 +147,7 @@ export default function WebPageCube({
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <HCard importPath={frontComponent} />
+              <MCard importPath={frontComponent} />
             </div>
           </div>
 
@@ -159,7 +159,7 @@ export default function WebPageCube({
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <HCard 
+              <MCard 
                 importPath={backComponent}
                 componentProps={{
                   title: "A 3D View"
@@ -176,7 +176,7 @@ export default function WebPageCube({
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <HCard importPath={rightComponent} />
+              <MCard importPath={rightComponent} />
             </div>
           </div>
 
@@ -188,7 +188,7 @@ export default function WebPageCube({
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <HCard importPath={leftComponent} />
+              <MCard importPath={leftComponent} />
             </div>
           </div>
 
@@ -200,7 +200,7 @@ export default function WebPageCube({
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <HCard 
+              <MCard 
                 importPath={topComponent}
                 componentProps={{
                   videoId: "HszHill46_M",
@@ -218,7 +218,7 @@ export default function WebPageCube({
             }}
           >
             <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <HCard 
+              <MCard 
                 importPath={bottomComponent}
                 componentProps={{
                   title: "Bottom View"

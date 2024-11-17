@@ -2,12 +2,12 @@
 
 import React, { Suspense, lazy, useMemo } from 'react';
 
-interface HCardProps {
+interface MCardProps {
   importPath: string;
   componentProps?: Record<string, any>;
 }
 
-const HCard: React.FC<HCardProps> = ({ importPath, componentProps = {} }) => {
+const MCard: React.FC<MCardProps> = ({ importPath, componentProps = {} }) => {
   // Memoize the lazy component to prevent re-creation
   const Component = useMemo(() => 
     lazy(async () => {
@@ -45,4 +45,4 @@ const HCard: React.FC<HCardProps> = ({ importPath, componentProps = {} }) => {
   );
 };
 
-export default React.memo(HCard);
+export default React.memo(MCard);
