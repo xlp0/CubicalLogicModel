@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
   <rect width="200" height="200" fill="#4F46E5" opacity="0.1"/>
-  <path d="M100 50L150 83.3V150L100 183.3L50 150V83.3L100 50Z" stroke="#4F46E5" stroke-width="2" fill="none"/>
+  <path d="M50 75L100 50L150 75V125L100 150L50 125V75Z" stroke="#4F46E5" stroke-width="4" fill="none"/>
+  <path d="M100 50V100M100 100V150M100 100L150 75M100 100L50 75" stroke="#4F46E5" stroke-width="2" stroke-opacity="0.5"/>
 </svg>

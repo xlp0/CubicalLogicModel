@@ -12,8 +12,8 @@ const { title, description, icon, link, featured = false, coming = false } = Ast
 ---
 
 <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-200">
-  <div class="aspect-w-16 aspect-h-9 bg-gray-100">
-    <div class="w-full h-48" set:html={icon} />
+  <div class="relative pt-[60%] bg-gray-50">
+    <div class="absolute inset-0 p-8" set:html={icon} />
   </div>
   <div class="p-6">
     <div class="flex items-center justify-between mb-2">
