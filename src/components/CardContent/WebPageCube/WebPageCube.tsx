@@ -162,21 +162,19 @@ export default function WebPageCube({
 
     return (
       <CubeFace key={`${position}-${key}`} position={position}>
-        <div className="w-full h-full bg-gray-800/90 rounded-xl overflow-hidden">
+        <div className="w-full h-full" style={{ transformStyle: 'preserve-3d' }}>
           {is3DComponent ? (
             <ThreeDViewContainer orientation={position}>
-              <MCard 
-                key={`mcard-${position}-${key}`}
-                importPath={componentName}
-                componentProps={{
-                  title,
-                  orientation: position,
-                  style: {
+              <div className="w-full h-full" style={{ transform: 'translateZ(1px)' }}>
+                <ThreeJsCube 
+                  title={title}
+                  orientation={position}
+                  style={{
                     width: '100%',
                     height: '100%'
-                  }
-                }}
-              />
+                  }}
+                />
+              </div>
             </ThreeDViewContainer>
           ) : (
             <MCard 
@@ -254,25 +252,33 @@ export default function WebPageCube({
       </div>
 
       <div 
-        ref={containerRef}
         className="relative"
         style={{
-          width: `${FACE_SIZE}px`,
-          height: `${FACE_SIZE}px`,
-          transformStyle: 'preserve-3d',
-          transform: `translate(-${FACE_SIZE / 2}px, -${FACE_SIZE / 2}px) scale(${scale}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-          transition: isDragging ? 'none' : 'transform 0.2s ease-out',
           position: 'absolute',
           left: '50%',
-          top: '50%'
+          top: '50%',
+          transform: `translate(-${FACE_SIZE / 2}px, -${FACE_SIZE / 2}px)`,
+          transformStyle: 'preserve-3d'
         }}
       >
-        {renderFace(frontComponent, 'front', "Front View")}
-        {renderFace(backComponent, 'back', "Back View")}
-        {renderFace(rightComponent, 'right', "Right View")}
-        {renderFace(leftComponent, 'left', "Left View")}
-        {renderFace(topComponent, 'top', "Top View")}
-        {renderFace(bottomComponent, 'bottom', "Bottom View")}
+        <div
+          ref={containerRef}
+          className="relative"
+          style={{
+            width: `${FACE_SIZE}px`,
+            height: `${FACE_SIZE}px`,
+            transformStyle: 'preserve-3d',
+            transform: `scale(${scale}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+            transition: isDragging ? 'none' : 'transform 0.2s ease-out'
+          }}
+        >
+          {renderFace(frontComponent, 'front', "Front View")}
+          {renderFace(backComponent, 'back', "Back View")}
+          {renderFace(rightComponent, 'right', "Right View")}
+          {renderFace(leftComponent, 'left', "Left View")}
+          {renderFace(topComponent, 'top', "Top View")}
+          {renderFace(bottomComponent, 'bottom', "Bottom View")}
+        </div>
       </div>
       
       <CubeControls

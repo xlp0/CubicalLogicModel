@@ -148,25 +148,42 @@ export default function ThreeJsCube({
   };
 
   return (
-    <div className="w-full h-full" style={style}>
+    <div className="w-full h-full relative" style={{
+      ...style,
+      transform: 'translateZ(0)',
+      backfaceVisibility: 'hidden'
+    }}>
       <Canvas
         camera={{ position: [0, 0, 4], fov: 45 }}
-        style={{ width: '100%', height: '100%' }}
-        className="bg-gray-800/90"
+        style={{ 
+          width: '100%', 
+          height: '100%',
+          borderRadius: 'inherit'
+        }}
+        className="bg-transparent"
+        gl={{ 
+          alpha: true,
+          antialias: true,
+          preserveDrawingBuffer: true
+        }}
+        linear
+        dpr={[1, 2]} // Responsive to device pixel ratio
       >
-        <color attach="background" args={['#1f2937']} />
+        <color attach="background" args={['transparent']} />
         <Scene
           isRotating={localIsRotating}
           controlsRef={controlsRef}
           orientation={orientation}
         />
       </Canvas>
-      <ThreeJsControls
-        isRotating={localIsRotating}
-        onToggleRotation={() => setLocalIsRotating(!localIsRotating)}
-        onResetView={handleReset}
-        onZoom={handleZoom}
-      />
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+        <ThreeJsControls
+          isRotating={localIsRotating}
+          onToggleRotation={() => setLocalIsRotating(!localIsRotating)}
+          onResetView={handleReset}
+          onZoom={handleZoom}
+        />
+      </div>
     </div>
   );
 }

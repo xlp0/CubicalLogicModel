@@ -14,13 +14,30 @@ export default function ThreeDViewContainer({
     switch (orientation) {
       case 'front': return '';
       case 'back': return 'rotateY(180deg)';
-      case 'right': return 'rotateY(-90deg)';
+      case 'right': return 'rotateZ(90deg)';
       case 'left': return 'rotateY(90deg)';
       case 'top': return 'rotateX(-90deg)';
-      case 'bottom': return 'rotateX(90deg)';
+      case 'bottom': return 'rotateZ(90deg)';
       default: return '';
     }
   };
+
+  // Calculate additional transform for ThreeJsCube alignment
+  const getAlignmentTransform = (orientation: string): string => {
+    switch (orientation) {
+      case 'front': return '';
+      case 'back': return 'rotateZ(180deg)';
+      case 'right': return 'rotateZ(-90deg)';
+      case 'left': return 'rotateZ(90deg)';
+      case 'top': return '';
+      case 'bottom': return 'rotateZ(180deg)';
+      default: return '';
+    }
+  };
+
+  const inverseTransform = getInverseTransform(orientation);
+  const alignmentTransform = getAlignmentTransform(orientation);
+  const combinedTransform = `${inverseTransform} ${alignmentTransform}`.trim();
 
   return (
     <div 
@@ -28,7 +45,13 @@ export default function ThreeDViewContainer({
       style={{
         position: 'relative',
         transformStyle: 'preserve-3d',
-        transform: getInverseTransform(orientation)
+        transform: combinedTransform,
+        perspective: '1000px',
+        perspectiveOrigin: '50% 50%',
+        transformOrigin: '50% 50%',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+        willChange: 'transform'
       }}
     >
       {children}
