@@ -72,10 +72,33 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
 
     return lazy(() => {
       console.log('Loading component:', importPath);
-      return import(/* @vite-ignore */ `./CardContent/${importPath}`)
+      
+      // Special case for SearchableCardSelector and ComponentSelector
+      if (importPath === 'SearchableCardSelector' || importPath === 'ComponentSelector') {
+        return import(`./CardContent/${importPath}`).catch(error => {
+          console.error(`Error loading selector component ${importPath}:`, error);
+          return {
+            default: () => (
+              <div className="p-4 bg-red-500/10 rounded-lg text-red-500">
+                Error loading component: {importPath}
+              </div>
+            )
+          };
+        });
+      }
+
+      // For other components, try with .tsx extension
+      return import(`./CardContent/${importPath}.tsx`)
+        .catch(() => import(`./CardContent/WebPageCube/${importPath}.tsx`))
         .catch(error => {
           console.error(`Error loading component ${importPath}:`, error);
-          return { default: () => <div>Error loading component</div> };
+          return {
+            default: () => (
+              <div className="p-4 bg-red-500/10 rounded-lg text-red-500">
+                Error loading component: {importPath}
+              </div>
+            )
+          };
         });
     });
   }, [importPath]);
@@ -99,4 +122,4 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
   );
 };
 
-export default React.memo(MCard);
+export default MCard;
