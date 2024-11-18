@@ -3,6 +3,7 @@ import CubeControls from "./CubeControls";
 import MCard from "../../MCard";
 import ThreeJsCube from "../ThreeJsCube";
 import CubeFace from "./CubeFace";
+import ThreeDViewContainer from "./ThreeDViewContainer";
 
 interface WebPageCubeProps {
   title?: string;
@@ -154,37 +155,45 @@ export default function WebPageCube({
 
   const renderFace = (
     componentName: string, 
-    transform: string, 
-    props: { title?: string; orientation?: 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom' }
+    position: 'front' | 'back' | 'right' | 'left' | 'top' | 'bottom',
+    title: string
   ) => {
+    const is3DComponent = componentName === 'ThreeJsCube';
+
     return (
-      <div 
-        key={`${props.orientation}-${key}`}
-        className="absolute w-full h-full bg-gray-800/90 rounded-xl overflow-hidden"
-        style={{
-          transform: `${transform}`,
-          transformStyle: 'preserve-3d',
-          transformOrigin: 'center center',
-          backfaceVisibility: 'hidden',
-          transition: isDragging ? 'none' : 'transform 0.2s ease-out'
-        }}
-      >
-        <MCard 
-          key={`mcard-${props.orientation}-${key}`}
-          importPath={componentName}
-          componentProps={{
-            title: props.title,
-            orientation: props.orientation,
-            style: {
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              top: 0,
-              left: 0
-            }
-          }}
-        />
-      </div>
+      <CubeFace key={`${position}-${key}`} position={position}>
+        <div className="w-full h-full bg-gray-800/90 rounded-xl overflow-hidden">
+          {is3DComponent ? (
+            <ThreeDViewContainer orientation={position}>
+              <MCard 
+                key={`mcard-${position}-${key}`}
+                importPath={componentName}
+                componentProps={{
+                  title,
+                  orientation: position,
+                  style: {
+                    width: '100%',
+                    height: '100%'
+                  }
+                }}
+              />
+            </ThreeDViewContainer>
+          ) : (
+            <MCard 
+              key={`mcard-${position}-${key}`}
+              importPath={componentName}
+              componentProps={{
+                title,
+                orientation: position,
+                style: {
+                  width: '100%',
+                  height: '100%'
+                }
+              }}
+            />
+          )}
+        </div>
+      </CubeFace>
     );
   };
 
@@ -212,45 +221,19 @@ export default function WebPageCube({
           width: `${FACE_SIZE}px`,
           height: `${FACE_SIZE}px`,
           transformStyle: 'preserve-3d',
-          transform: `scale(${scale}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-          transition: isDragging ? 'none' : 'transform 0.2s ease-out'
+          transform: `translate(-${FACE_SIZE / 2}px, -${FACE_SIZE / 2}px) scale(${scale}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+          transition: isDragging ? 'none' : 'transform 0.2s ease-out',
+          position: 'absolute',
+          left: '50%',
+          top: '50%'
         }}
       >
-        {/* Front */}
-        {renderFace(frontComponent, `translateZ(${TRANSLATE_DISTANCE}px)`, {
-          title: "Front View",
-          orientation: 'front'
-        })}
-        
-        {/* Back */}
-        {renderFace(backComponent, `translateZ(-${TRANSLATE_DISTANCE}px) rotateY(180deg)`, {
-          title: "Back View",
-          orientation: 'back'
-        })}
-        
-        {/* Right */}
-        {renderFace(rightComponent, `translateX(${TRANSLATE_DISTANCE}px) rotateY(90deg)`, {
-          title: "Right View",
-          orientation: 'right'
-        })}
-        
-        {/* Left */}
-        {renderFace(leftComponent, `translateX(-${TRANSLATE_DISTANCE}px) rotateY(-90deg)`, {
-          title: "Left View",
-          orientation: 'left'
-        })}
-        
-        {/* Top */}
-        {renderFace(topComponent, `translateY(-${TRANSLATE_DISTANCE}px) rotateX(90deg)`, {
-          title: "Top View",
-          orientation: 'top'
-        })}
-        
-        {/* Bottom */}
-        {renderFace(bottomComponent, `translateY(${TRANSLATE_DISTANCE}px) rotateX(-90deg)`, {
-          title: "Bottom View",
-          orientation: 'bottom'
-        })}
+        {renderFace(frontComponent, 'front', "Front View")}
+        {renderFace(backComponent, 'back', "Back View")}
+        {renderFace(rightComponent, 'right', "Right View")}
+        {renderFace(leftComponent, 'left', "Left View")}
+        {renderFace(topComponent, 'top', "Top View")}
+        {renderFace(bottomComponent, 'bottom', "Bottom View")}
       </div>
       
       <CubeControls
