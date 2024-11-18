@@ -69,7 +69,7 @@ function Scene({ isRotating, controlsRef, orientation }: { isRotating: boolean; 
 
   return (
     <>
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={0.7} />
       <pointLight position={[10, 10, 10]} intensity={0.5} />
       <CoordinateSystem />
       <RotatingCube isRotating={isRotating} />
@@ -160,7 +160,7 @@ export default function ThreeJsCube({
           height: '100%',
           borderRadius: 'inherit'
         }}
-        className="bg-transparent"
+        className="bg-gray-800"
         gl={{ 
           alpha: true,
           antialias: true,
@@ -169,7 +169,7 @@ export default function ThreeJsCube({
         linear
         dpr={[1, 2]} // Responsive to device pixel ratio
       >
-        <color attach="background" args={['transparent']} />
+        <color attach="background" args={['#1f2937']} />
         <Scene
           isRotating={localIsRotating}
           controlsRef={controlsRef}

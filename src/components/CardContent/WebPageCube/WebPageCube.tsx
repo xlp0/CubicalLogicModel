@@ -165,7 +165,7 @@ export default function WebPageCube({
         <div className="w-full h-full" style={{ transformStyle: 'preserve-3d' }}>
           {is3DComponent ? (
             <ThreeDViewContainer orientation={position}>
-              <div className="w-full h-full" style={{ transform: 'translateZ(1px)' }}>
+              <div className="w-full h-full" style={{ transform: 'translateZ(1px) ' }}>
                 <ThreeJsCube 
                   title={title}
                   orientation={position}
