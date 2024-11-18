@@ -51,7 +51,12 @@ const panes = [
 
 <div class="h-screen bg-gray-900">
   <SplitLayout client:only="react" panes={panes} />
-  <ResizeHandler client:only="react" />
+  <ResizeHandler 
+    client:only="react" 
+    resizerWidth={5}
+    resizerColor="#2a2a2a"
+    resizingColor="#00ffff"
+  />
 </div>
 
 <style>
@@ -110,8 +115,8 @@ const panes = [
   }
 
   :global(.resizer) {
-    background: #2a2a2a;
-    transition: background-color 0.2s ease;
+    background: var(--resizer-color);
+    transition: all 0.2s ease;
     z-index: 10;
     flex: none;
     position: relative;
@@ -119,45 +124,43 @@ const panes = [
 
   :global(.resizer.vertical) {
     cursor: col-resize;
-    width: 8px;  
+    width: var(--resizer-width, 3px);
     height: 100%;
-    margin: 0 -2px;  
   }
 
   :global(.resizer.horizontal) {
     cursor: row-resize;
-    height: 8px;  
+    height: var(--resizer-width, 3px);
     width: 100%;
-    margin: -2px 0;  
   }
 
   :global(.resizer:hover) {
-    background: #3a3a3a;
+    background: var(--resizing-color);
   }
 
   :global(.resizer.vertical:hover) {
-    width: 12px;  
-    margin: 0 -4px;  
+    width: var(--resizer-hover-width, 7px);
+    margin: 0 var(--resizer-hit-margin, -5px);
   }
 
   :global(.resizer.horizontal:hover) {
-    height: 12px;  
-    margin: -4px 0;  
+    height: var(--resizer-hover-width, 7px);
+    margin: var(--resizer-hit-margin, -5px) 0;
   }
 
   :global(.resizer::after) {
     content: "";
     position: absolute;
     top: 0;
-    left: -8px;  
-    right: -8px;  
+    left: var(--resizer-hit-margin, -5px);
+    right: var(--resizer-hit-margin, -5px);
     bottom: 0;
     cursor: inherit;
   }
 
   :global(.resizer-handle) {
     position: absolute;
-    background: #4a4a4a;
+    background: var(--resizing-color);
     opacity: 0;
     transition: opacity 0.2s ease;
   }

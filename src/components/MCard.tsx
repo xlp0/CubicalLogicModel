@@ -51,7 +51,7 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
   if (defaultContent) {
     const DefaultComponent = defaultContent;
     return (
-      <div ref={cardRef} className="h-full w-full" data-component={importPath}>
+      <div ref={cardRef} className="h-full w-full p-2" data-component={importPath}>
         <Suspense fallback={<LoadingFallback />}>
           <DefaultComponent {...props} />
         </Suspense>
@@ -94,7 +94,7 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
   );
 
   return (
-    <div ref={cardRef} className="h-full w-full" data-component={importPath}>
+    <div ref={cardRef} className="h-full w-full p-2" data-component={importPath}>
       <Suspense fallback={<LoadingFallback />}>
         <Component {...props} />
       </Suspense>

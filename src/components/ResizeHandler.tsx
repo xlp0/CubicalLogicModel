@@ -1,6 +1,16 @@
 import React, { useEffect } from 'react';
 
-const ResizeHandler: React.FC = () => {
+interface ResizeHandlerProps {
+  resizerWidth?: number; // Width in pixels
+  resizerColor?: string; // Normal color
+  resizingColor?: string; // Color during resize
+}
+
+const ResizeHandler: React.FC<ResizeHandlerProps> = ({ 
+  resizerWidth = 3,
+  resizerColor = '#2a2a2a',
+  resizingColor = '#00ffff' // Default cyan
+}) => {
   useEffect(() => {
     let isResizing = false;
     let activeResizer: HTMLElement | null = null;
@@ -10,6 +20,34 @@ const ResizeHandler: React.FC = () => {
     let minWidths: number[] = [];
     let panes: HTMLElement[] = [];
 
+    // Set CSS variables for resizer width and colors
+    document.documentElement.style.setProperty('--resizer-width', `${resizerWidth}px`);
+    document.documentElement.style.setProperty('--resizer-hover-width', `${resizerWidth + 4}px`);
+    document.documentElement.style.setProperty('--resizer-hit-margin', `${-resizerWidth - 2}px`);
+    document.documentElement.style.setProperty('--resizer-color', resizerColor);
+    document.documentElement.style.setProperty('--resizing-color', resizingColor);
+
+    function setResizingState(resizer: HTMLElement | null, isActive: boolean) {
+      if (resizer) {
+        const isHorizontal = resizer.classList.contains('horizontal');
+        if (isActive) {
+          resizer.style.setProperty('background-color', resizingColor, 'important');
+          if (isHorizontal) {
+            resizer.style.setProperty('height', `${resizerWidth + 4}px`, 'important');
+            resizer.style.setProperty('margin', `${-resizerWidth - 2}px 0`, 'important');
+          } else {
+            resizer.style.setProperty('width', `${resizerWidth + 4}px`, 'important');
+            resizer.style.setProperty('margin', `0 ${-resizerWidth - 2}px`, 'important');
+          }
+        } else {
+          resizer.style.removeProperty('background-color');
+          resizer.style.removeProperty('width');
+          resizer.style.removeProperty('height');
+          resizer.style.removeProperty('margin');
+        }
+      }
+    }
+
     function initResize(e: MouseEvent) {
       const resizer = (e.target as HTMLElement).closest('.resizer');
       if (!resizer || isResizing) return;
@@ -17,6 +55,8 @@ const ResizeHandler: React.FC = () => {
       e.preventDefault();
       isResizing = true;
       activeResizer = resizer as HTMLElement;
+      setResizingState(activeResizer, true);
+      
       startX = e.pageX;
       startY = e.pageY;
 
@@ -147,6 +187,7 @@ const ResizeHandler: React.FC = () => {
     }
 
     function stopResize() {
+      setResizingState(activeResizer, false);
       isResizing = false;
       activeResizer = null;
       startWidths = [];
@@ -167,8 +208,13 @@ const ResizeHandler: React.FC = () => {
       document.removeEventListener('mousedown', initResize);
       document.removeEventListener('mousemove', resize);
       document.removeEventListener('mouseup', stopResize);
+      document.documentElement.style.removeProperty('--resizer-width');
+      document.documentElement.style.removeProperty('--resizer-hover-width');
+      document.documentElement.style.removeProperty('--resizer-hit-margin');
+      document.documentElement.style.removeProperty('--resizer-color');
+      document.documentElement.style.removeProperty('--resizing-color');
     };
-  }, []);
+  }, [resizerWidth, resizerColor, resizingColor]);
 
   return null;
 };
