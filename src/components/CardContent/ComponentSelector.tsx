@@ -1,11 +1,30 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { FileText } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { 
+  FaReact, 
+  FaYoutube, 
+  FaCalculator, 
+  FaClock, 
+  FaMusic, 
+  FaCube, 
+  FaList, 
+  FaImage, 
+  FaCode, 
+  FaChartBar,
+  FaPalette,
+  FaFileAlt,
+  FaFolder
+} from 'react-icons/fa';
 
 interface CardData {
   importPath: string;
   componentProps: {
     title: string;
+    videoId?: string;
+    iconPath?: string;
     [key: string]: any;
   };
   height: string;
@@ -21,7 +40,7 @@ interface CardWithId extends CardData {
   uniqueId: string;
 }
 
-export default function ComponentSelector({ onComponentSelect, title = "Selected Cards" }: ComponentSelectorProps) {
+export default function ComponentSelector({ onComponentSelect, title = "Component Library" }: ComponentSelectorProps) {
   const [cards, setCards] = useState<CardWithId[]>([]);
   const [activeCardId, setActiveCardId] = useState<string>();
 
@@ -30,7 +49,6 @@ export default function ComponentSelector({ onComponentSelect, title = "Selected
       try {
         const response = await fetch('/src/data/SelectedCards.json');
         const data = await response.json();
-        // Add unique IDs to each card
         const cardsWithIds = data.cards.map((card: CardData, index: number) => ({
           ...card,
           uniqueId: `${card.importPath}-${index}`
@@ -47,7 +65,6 @@ export default function ComponentSelector({ onComponentSelect, title = "Selected
   const handleSelect = (card: CardWithId) => {
     setActiveCardId(card.uniqueId);
     
-    // Create a custom event with both the component name and its props
     const event = new CustomEvent('componentSelected', { 
       detail: {
         importPath: card.importPath,
@@ -63,23 +80,47 @@ export default function ComponentSelector({ onComponentSelect, title = "Selected
     }
   };
 
+  const getComponentIcon = (importPath: string) => {
+    const iconMap: { [key: string]: JSX.Element } = {
+      'ThreeJsCube': <FaCube className="w-4 h-4 text-blue-400" />,
+      'YouTubePlayer': <FaYoutube className="w-4 h-4 text-red-500" />,
+      'Calculator': <FaCalculator className="w-4 h-4 text-yellow-400" />,
+      'Notes': <FaFileAlt className="w-4 h-4 text-green-400" />,
+      'Clock': <FaClock className="w-4 h-4 text-blue-400" />,
+      'TodoList': <FaList className="w-4 h-4 text-orange-500" />,
+      'SpotifyPlayer': <FaMusic className="w-4 h-4 text-green-500" />,
+      'LogoDisplay': <FaImage className="w-4 h-4 text-blue-500" />,
+      'Dashboard': <FaChartBar className="w-4 h-4 text-cyan-400" />,
+      'ColorPicker': <FaPalette className="w-4 h-4 text-purple-400" />,
+      'AbstractSpec': <FaCode className="w-4 h-4 text-purple-500" />,
+      'ConcreteImpl': <FaCode className="w-4 h-4 text-indigo-500" />,
+      'TreeView': <FaFolder className="w-4 h-4 text-yellow-500" />,
+      'WebPageCube': <FaCube className="w-4 h-4 text-pink-500" />,
+      'Counter': <FaReact className="w-4 h-4 text-cyan-400 animate-spin-slow" />
+    };
+
+    return iconMap[importPath] || <FileText className="w-4 h-4 text-gray-400" />;
+  };
+
   return (
-    <div className="h-full flex flex-col bg-gray-800/80">
-      <div className="p-4 border-b border-gray-700">
-        <h3 className="text-white text-sm font-semibold">{title}</h3>
+    <div className="h-full flex flex-col bg-gray-900">
+      <div className="p-4 border-b border-gray-700/50">
+        <h3 className="text-gray-100 text-sm font-semibold">{title}</h3>
       </div>
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900">
         <div className="p-2 space-y-1">
           {cards.map((card) => (
             <Button
               key={card.uniqueId}
               variant={activeCardId === card.uniqueId ? "secondary" : "ghost"}
-              className={`w-full justify-start gap-2 py-1 ${
-                activeCardId === card.uniqueId ? 'bg-gray-600' : 'hover:bg-gray-700'
+              className={`w-full justify-start gap-2 py-1.5 text-gray-100 transition-colors duration-200 ${
+                activeCardId === card.uniqueId 
+                  ? 'bg-gray-700/90 hover:bg-gray-700' 
+                  : 'hover:bg-gray-800/90'
               }`}
               onClick={() => handleSelect(card)}
             >
-              <FileText className="w-4 h-4 text-blue-500" />
+              {getComponentIcon(card.importPath)}
               <span className="text-sm truncate">
                 {card.componentProps.title || card.title || card.importPath}
               </span>
