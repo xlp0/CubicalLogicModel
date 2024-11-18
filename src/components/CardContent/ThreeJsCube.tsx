@@ -108,6 +108,45 @@ export default function ThreeJsCube({
     setLocalIsRotating(isRotating);
   }, [isRotating]);
 
+  const handleReset = () => {
+    if (controlsRef.current) {
+      const controls = controlsRef.current;
+      const camera = controls.object;
+      
+      // Reset position
+      camera.position.set(0, 0, 4);
+      camera.up.set(0, 1, 0);
+      camera.lookAt(0, 0, 0);
+      camera.updateProjectionMatrix();
+      
+      // Reset controls
+      controls.reset();
+      controls.update();
+    }
+  };
+
+  const handleZoom = (direction: 'in' | 'out') => {
+    if (controlsRef.current) {
+      const controls = controlsRef.current;
+      const camera = controls.object;
+      
+      // Get current distance from target
+      const distance = controls.getDistance();
+      
+      // Calculate new distance
+      const factor = direction === 'in' ? 0.9 : 1.1;
+      const newDistance = distance * factor;
+      
+      // Update camera position
+      const dir = camera.position.clone().sub(controls.target).normalize();
+      camera.position.copy(controls.target).add(dir.multiplyScalar(newDistance));
+      
+      // Force update
+      camera.updateProjectionMatrix();
+      controls.update();
+    }
+  };
+
   return (
     <div className="w-full h-full" style={style}>
       <Canvas
@@ -122,17 +161,12 @@ export default function ThreeJsCube({
           orientation={orientation}
         />
       </Canvas>
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-        <ThreeJsControls
-          isRotating={localIsRotating}
-          onToggleRotation={() => setLocalIsRotating(!localIsRotating)}
-          onReset={() => {
-            if (controlsRef.current) {
-              controlsRef.current.reset();
-            }
-          }}
-        />
-      </div>
+      <ThreeJsControls
+        isRotating={localIsRotating}
+        onToggleRotation={() => setLocalIsRotating(!localIsRotating)}
+        onResetView={handleReset}
+        onZoom={handleZoom}
+      />
     </div>
   );
 }
