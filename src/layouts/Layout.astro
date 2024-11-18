@@ -1,6 +1,4 @@
 ---
-import SplitPane from '@/components/SplitLayout/SplitPane';
-
 interface Props {
   title: string;
 }
@@ -18,7 +16,7 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="h-screen bg-gray-900">
-    <SplitPane client:only="react" />
+    <slot />
   </body>
 </html>
 
@@ -48,6 +46,7 @@ const { title } = Astro.props;
     
     .preserve-3d {
       transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
     }
   }
 
@@ -56,26 +55,5 @@ const { title } = Astro.props;
     margin: 0;
     padding: 0;
     overflow: hidden;
-  }
-
-  /* Split pane styles */
-  .split {
-    display: flex;
-    height: 100vh;
-  }
-
-  .gutter {
-    background-color: #4a5568;
-    background-repeat: no-repeat;
-    background-position: 50%;
-  }
-
-  .gutter:hover {
-    background-color: #718096;
-  }
-
-  .gutter.gutter-horizontal {
-    cursor: col-resize;
-    width: 4px;
   }
 </style>

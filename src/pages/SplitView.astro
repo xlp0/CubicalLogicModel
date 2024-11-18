@@ -1,30 +1,32 @@
 ---
+import Layout from '../layouts/Layout.astro';
 import SplitLayout from '../components/SplitLayout';
-import ResizeHandler from '../components/ResizeHandler';
+import FloatingNav from '../components/FloatingNav';
 
 const defaultComponent = "Notes";
 
 const panes = [
   {
-    importPath: "SearchableCardSelector",
+    importPath: "ComponentSelector",
     width: "250px",
-    minWidth: "200px",
+    minWidth: "40px",
     componentProps: {
-      title: "Component Library"
+      title: "Component Library",
+      isCompact: "auto"
     }
   },
   {
     width: "calc(100% - 650px)",
     minWidth: "400px",
     split: {
-      direction: 'horizontal',
-      sizes: [1, 1],
+      direction: 'vertical',
+      sizes: [50, 50],
       panes: [
         {
           importPath: defaultComponent,
           minWidth: "300px",
           componentProps: {
-            title: defaultComponent
+            title: "Notes"
           }
         },
         {
@@ -49,133 +51,61 @@ const panes = [
 ];
 ---
 
-<div class="h-screen bg-gray-900">
-  <SplitLayout client:only="react" panes={panes} />
-  <ResizeHandler 
-    client:only="react" 
-    resizerWidth={5}
-    resizerColor="#2a2a2a"
-    resizingColor="#00ffff"
-  />
-</div>
+<Layout title="Split View">
+  <div class="fixed inset-0 flex flex-col bg-gray-900 text-gray-100">
+    <FloatingNav client:only="react" />
+    <div class="flex-1 overflow-hidden">
+      <SplitLayout client:only="react" panes={panes} />
+    </div>
+  </div>
+</Layout>
 
 <style>
-  :global(.split-container) {
+  /* Split pane styles */
+  :global(.split) {
+    height: 100%;
     display: flex;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    background: #1a1a1a;
   }
 
-  :global(.pane) {
-    position: relative;
-    height: 100%;
-    overflow: hidden;
-    display: flex;
+  :global(.split.vertical) {
     flex-direction: column;
   }
 
-  :global(.pane-content) {
-    position: relative;
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    overflow: hidden;
-  }
-
-  :global(.split-pane) {
-    display: flex;
-    width: 100%;
-    height: 100%;
-  }
-
-  :global(.split-pane.vertical) {
+  :global(.split.horizontal) {
     flex-direction: row;
   }
 
-  :global(.split-pane.horizontal) {
-    flex-direction: column;
-  }
-
-  :global(.split-pane-child) {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    min-width: 0;
-  }
-
-  :global(.split-pane.vertical > .split-pane-child) {
+  :global(.split-pane) {
     height: 100%;
+    overflow: hidden;
   }
 
-  :global(.split-pane.horizontal > .split-pane-child) {
-    width: 100%;
+  :global(.gutter) {
+    background-color: #4a5568;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transition: background-color 0.15s;
   }
 
-  :global(.resizer) {
-    background: var(--resizer-color);
-    transition: all 0.2s ease;
-    z-index: 10;
-    flex: none;
-    position: relative;
+  :global(.gutter:hover) {
+    background-color: #718096;
   }
 
-  :global(.resizer.vertical) {
+  :global(.gutter.gutter-horizontal) {
     cursor: col-resize;
-    width: var(--resizer-width, 3px);
-    height: 100%;
+    width: 4px;
   }
 
-  :global(.resizer.horizontal) {
+  :global(.gutter.gutter-vertical) {
     cursor: row-resize;
-    height: var(--resizer-width, 3px);
-    width: 100%;
-  }
-
-  :global(.resizer:hover) {
-    background: var(--resizing-color);
-  }
-
-  :global(.resizer.vertical:hover) {
-    width: var(--resizer-hover-width, 7px);
-    margin: 0 var(--resizer-hit-margin, -5px);
-  }
-
-  :global(.resizer.horizontal:hover) {
-    height: var(--resizer-hover-width, 7px);
-    margin: var(--resizer-hit-margin, -5px) 0;
-  }
-
-  :global(.resizer::after) {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: var(--resizer-hit-margin, -5px);
-    right: var(--resizer-hit-margin, -5px);
-    bottom: 0;
-    cursor: inherit;
-  }
-
-  :global(.resizer-handle) {
-    position: absolute;
-    background: var(--resizing-color);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  :global(.resizer.vertical .resizer-handle) {
-    width: 2px;
-    height: 40px;
-  }
-
-  :global(.resizer.horizontal .resizer-handle) {
-    width: 40px;
-    height: 2px;
-  }
-
-  :global(.resizer:hover .resizer-handle) {
-    opacity: 1;
+    height: 4px;
   }
 </style>
+
+<script>
+  // Handle component selection events
+  document.addEventListener('componentSelected', (e: any) => {
+    const event = e as CustomEvent<{ importPath: string; componentProps: Record<string, any> }>;
+    console.log('Component selected:', event.detail);
+  });
+</script>

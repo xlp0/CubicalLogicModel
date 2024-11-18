@@ -26,14 +26,23 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
     const handleComponentSelected = (e: ComponentSelectedEvent) => {
       if (!cardRef.current) return;
 
-      // Check if this MCard is in the top pane
-      const splitPane = document.querySelector('.split-pane');
-      if (!splitPane) return;
+      // Find the closest split container
+      const splitContainer = cardRef.current.closest('.split.horizontal');
+      if (!splitContainer) return;
 
-      const topPane = splitPane.querySelector('.split-pane-child:first-child');
+      // Get all vertical splits that are direct children of the horizontal split
+      const verticalSplits = Array.from(splitContainer.querySelectorAll(':scope > .split.vertical'));
+      
+      // Find the middle vertical split (in a three-pane layout)
+      const middleVerticalSplit = verticalSplits[0];
+      if (!middleVerticalSplit) return;
+
+      // Get the top pane of the middle vertical split
+      const verticalPanes = middleVerticalSplit.querySelectorAll(':scope > .split-pane');
+      const topPane = verticalPanes[0];
       if (!topPane) return;
 
-      // Only update if this MCard is in the top pane
+      // Check if this MCard is in the top pane
       if (topPane.contains(cardRef.current)) {
         const { importPath: newImportPath, componentProps: newProps } = e.detail;
         console.log('Updating top pane component to:', newImportPath, 'with props:', newProps);
@@ -87,11 +96,11 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
         });
       }
 
-      // For other components, try with .tsx extension
-      return import(`./CardContent/${importPath}.tsx`)
-        .catch(() => import(`./CardContent/WebPageCube/${importPath}.tsx`))
-        .catch(error => {
-          console.error(`Error loading component ${importPath}:`, error);
+      // Handle WebPageCube components
+      if (importPath.startsWith('WebPageCube/')) {
+        const componentName = importPath.split('/')[1];
+        return import(`./CardContent/WebPageCube/${componentName}`).catch(error => {
+          console.error(`Error loading WebPageCube component ${componentName}:`, error);
           return {
             default: () => (
               <div className="p-4 bg-red-500/10 rounded-lg text-red-500">
@@ -100,6 +109,19 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
             )
           };
         });
+      }
+
+      // For other components
+      return import(`./CardContent/${importPath}`).catch(error => {
+        console.error(`Error loading component ${importPath}:`, error);
+        return {
+          default: () => (
+            <div className="p-4 bg-red-500/10 rounded-lg text-red-500">
+              Error loading component: {importPath}
+            </div>
+          )
+        };
+      });
     });
   }, [importPath]);
 

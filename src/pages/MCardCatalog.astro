@@ -1,15 +1,22 @@
 ---
 import ManyCardLayout from '../layouts/ManyCardLayout.astro';
 import selectedCards from '../data/SelectedCards.json';
+import FloatingNav from '../components/FloatingNav';
 
 // Add debug logging
 console.log('MCardCatalog loading with cards:', selectedCards.cards);
 
 ---
 
-<ManyCardLayout 
-  title="Model Card Library" 
-  cards={selectedCards.cards}
-  columns={5}
-  gap={2}
-/>
+<div class="h-screen w-screen bg-gray-900 text-gray-100">
+  <FloatingNav client:load />
+  <div class="container mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-6">Card Catalog</h1>
+    <ManyCardLayout 
+      title="Model Card Library" 
+      cards={selectedCards.cards}
+      columns={5}
+      gap={2}
+    />
+  </div>
+</div>

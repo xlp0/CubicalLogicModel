@@ -15,12 +15,12 @@ export default function RealisticExpectations() {
   };
 
   return (
-    <div className="h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-4">
-      <div className="w-full max-w-md bg-gray-700 rounded-lg p-3">
+    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-4 transform-gpu">
+      <div className="w-full h-full max-w-none bg-gray-700 rounded-lg p-3 flex flex-col">
         <div className="text-white text-center text-lg font-semibold mb-2">
           Realistic Expectations
         </div>
-        <table className="w-full text-left text-white text-sm">
+        <table className="w-full text-left text-white text-sm flex-grow">
           <tbody className="space-y-1">
             <tr>
               <th className="p-1.5 bg-gray-800 rounded-lg text-xs font-medium">Boundaries</th>

@@ -15,12 +15,12 @@ export default function ConcreteImpl() {
   };
 
   return (
-    <div className="h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-8">
-      <div className="w-full max-w-md bg-gray-700 rounded-xl p-4">
+    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-8 transform-gpu">
+      <div className="w-full h-full max-w-none bg-gray-700 rounded-xl p-4 flex flex-col">
         <div className="text-white text-center text-2xl mb-4">
           Concrete Implementation
         </div>
-        <table className="w-full text-center text-white">
+        <table className="w-full text-center text-white flex-grow">
           <thead>
             <tr>
               <th className="p-2 bg-gray-800 rounded-t-lg">Inputs</th>

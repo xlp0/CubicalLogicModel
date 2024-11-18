@@ -1,65 +1,38 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Split from 'react-split';
-import WebPageCube from '../components/WebPageCube/WebPageCube';
-import ThreeJsCube from '../components/CardContent/ThreeJsCube';
+import FloatingNav from '../components/FloatingNav';
+import WebPageCube from '../components/CardContent/WebPageCube/WebPageCube';
 import Dashboard from '../components/CardContent/Dashboard';
 
 ---
 
 <Layout title="Cubical Logic Model">
-  <div class="split-container">
-    <div class="split">
-      <div class="split-item">
-        <WebPageCube client:only="react" />
+  <main class="relative h-screen w-screen bg-gray-900 text-gray-100 overflow-hidden">
+    <FloatingNav client:only="react" />
+    <div class="h-full flex">
+      <div class="flex-1">
+        <div class="h-full" id="webPageCube">
+          <WebPageCube client:only="react" />
+        </div>
       </div>
-      <div class="split-item">
-        <Dashboard client:only="react" />
+      <div class="flex-1">
+        <div class="h-full" id="dashboard">
+          <Dashboard client:only="react" />
+        </div>
       </div>
-      <div class="gutter"></div>
     </div>
-  </div>
+  </main>
 </Layout>
 
 <style>
-  .split-container {
-    height: 100vh;
-    width: 100vw;
-  }
-
-  .split {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-  }
-
-  .split-item {
-    flex: 1;
+  #webPageCube, #dashboard {
     height: 100%;
     overflow: hidden;
-  }
-
-  .gutter {
-    background-color: #4a5568;
-    cursor: col-resize;
-    width: 4px;
-  }
-
-  .gutter:hover {
-    background-color: #718096;
   }
 </style>
 
 <script>
-  import Split from 'react-split';
-  
   document.addEventListener('DOMContentLoaded', () => {
-    Split({
-      columnGutters: [{
-        track: 1,
-        element: document.querySelector('.gutter') as HTMLElement,
-      }],
-      minSize: 300,
-    });
+    // No changes made to the script section
   });
 </script>

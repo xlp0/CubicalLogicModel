@@ -1,4 +1,7 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
+import Split from 'split.js';
 import MCard from './MCard';
 
 interface PaneConfig {
@@ -19,67 +22,92 @@ interface SplitLayoutProps {
 }
 
 const SplitLayout: React.FC<SplitLayoutProps> = ({ panes }) => {
-  return (
-    <div className="split-container">
-      {panes.map((pane, index) => (
-        <React.Fragment key={`pane-wrapper-${index}`}>
-          <div 
-            className="pane"
-            data-index={index}
-            data-component={pane.importPath}
-            data-min-width={pane.minWidth?.replace('px', '')}
-            style={{
-              width: pane.width
-            }}
-          >
-            <div className="pane-content">
-              {pane.split ? (
-                <div className={`split-pane ${pane.split.direction}`}>
-                  {pane.split.panes.map((splitPane, splitIndex) => (
-                    <React.Fragment key={`split-pane-wrapper-${splitIndex}`}>
-                      <div 
-                        className="split-pane-child"
-                        style={{
-                          flex: `${pane.split.sizes[splitIndex]} ${pane.split.sizes[splitIndex]} 0%`
-                        }}
-                      >
-                        <div className="pane-content">
-                          <MCard 
-                            importPath={splitPane.importPath}
-                            componentProps={splitPane.componentProps}
-                          />
-                        </div>
-                      </div>
-                      {splitIndex < pane.split.panes.length - 1 && (
-                        <div 
-                          className={`resizer ${pane.split.direction}`}
-                          data-parent-index={index}
-                          data-split-index={splitIndex}
-                          data-direction={pane.split.direction}
-                        >
-                          <div className="resizer-handle" />
-                        </div>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </div>
-              ) : (
-                <MCard 
-                  importPath={pane.importPath}
-                  componentProps={pane.componentProps}
-                />
-              )}
-            </div>
-          </div>
-          {index < panes.length - 1 && (
+  const splitRef = useRef<Split.Instance[]>([]);
+
+  useEffect(() => {
+    // Clean up previous Split instances
+    splitRef.current.forEach(instance => instance.destroy());
+    splitRef.current = [];
+
+    // Initialize Split.js on all split containers
+    const splitElements = document.querySelectorAll('.split');
+    splitElements.forEach((element) => {
+      const direction = element.classList.contains('vertical') ? 'vertical' : 'horizontal';
+      const children = Array.from(element.children).filter(child => !child.classList.contains('gutter'));
+      
+      const instance = Split(children as HTMLElement[], {
+        direction,
+        gutterSize: 4,
+        minSize: 100,
+        snapOffset: 0,
+        gutter: (index, direction) => {
+          const gutter = document.createElement('div');
+          gutter.className = `gutter gutter-${direction}`;
+          return gutter;
+        },
+      });
+      
+      splitRef.current.push(instance);
+    });
+
+    return () => {
+      // Cleanup on unmount
+      splitRef.current.forEach(instance => instance.destroy());
+    };
+  }, []);
+
+  const renderPane = (pane: PaneConfig, index: number) => {
+    if (pane.split) {
+      return (
+        <div 
+          className={`split ${pane.split.direction}`}
+          style={{ 
+            width: pane.width, 
+            minWidth: pane.minWidth,
+            height: '100%',
+          }}
+        >
+          {pane.split.panes.map((splitPane, splitIndex) => (
             <div 
-              className="resizer vertical" 
-              data-index={index} 
-              data-direction="vertical"
+              key={`split-pane-${index}-${splitIndex}`}
+              className="split-pane"
+              style={{ 
+                minWidth: splitPane.minWidth,
+                height: '100%',
+              }}
             >
-              <div className="resizer-handle" />
+              <MCard 
+                importPath={splitPane.importPath}
+                componentProps={splitPane.componentProps}
+              />
             </div>
-          )}
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div 
+        className="split-pane"
+        style={{ 
+          width: pane.width, 
+          minWidth: pane.minWidth,
+          height: '100%',
+        }}
+      >
+        <MCard 
+          importPath={pane.importPath}
+          componentProps={pane.componentProps}
+        />
+      </div>
+    );
+  };
+
+  return (
+    <div className="split horizontal" style={{ height: '100%' }}>
+      {panes.map((pane, index) => (
+        <React.Fragment key={`pane-${index}`}>
+          {renderPane(pane, index)}
         </React.Fragment>
       ))}
     </div>

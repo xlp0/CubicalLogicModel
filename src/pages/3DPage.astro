@@ -1,5 +1,6 @@
 ---
 import SingleCardLayout from '../layouts/SingleCardLayout.astro';
+import FloatingNav from '../components/FloatingNav';
 
 // Add debug logging
 console.log('[3DPage] Imports loaded:', { 
@@ -9,10 +10,15 @@ console.log('[3DPage] Imports loaded:', {
 
 ---
 
-<SingleCardLayout 
-  title="3D Visualization" 
-  importPath="ThreeJsCube"
-  componentProps={{
-    title: "Interactive 3D Cube"
-  }}
-/>
+<div class="h-screen w-screen bg-gray-900 text-gray-100">
+  <FloatingNav client:load />
+  <div class="container mx-auto p-8">
+    <SingleCardLayout 
+      title="3D Visualization" 
+      importPath="ThreeJsCube"
+      componentProps={{
+        title: "Interactive 3D Cube"
+      }}
+    />
+  </div>
+</div>

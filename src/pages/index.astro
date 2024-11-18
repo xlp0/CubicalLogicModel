@@ -2,9 +2,11 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import Features from '../components/landing/Features.astro';
 import Courses from '../components/landing/Courses.astro';
+import FloatingNav from '../components/FloatingNav';
 ---
 
 <LandingLayout title="GASing - Interactive Learning Platform">
+	<FloatingNav client:load />
 	<main>
 		<Features />
 		<Courses />

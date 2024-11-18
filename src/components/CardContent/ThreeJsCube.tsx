@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -50,32 +50,23 @@ function MiniCube({ isRotating }: CubeProps) {
 
 function Scene({ isRotating, controlsRef }: { isRotating: boolean; controlsRef: React.RefObject<any> }) {
   const { camera } = useThree();
-  const initialCameraPosition = new THREE.Vector3(2, 2, 2);
 
-  // Reset camera position on mount
   React.useEffect(() => {
-    camera.position.copy(initialCameraPosition);
+    camera.position.set(2, 2, 2);
     camera.lookAt(0, 0, 0);
   }, [camera]);
 
   return (
     <>
-      <color attach="background" args={['#000000']} />
-      
-      {/* Lighting */}
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-      <directionalLight position={[-5, -5, -5]} intensity={0.2} />
-      
-      {/* Scene Content */}
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} />
       <CoordinateSystem />
       <MiniCube isRotating={isRotating} />
-
-      {/* Controls */}
-      <OrbitControls 
+      <OrbitControls
         ref={controlsRef}
         enableDamping
         dampingFactor={0.05}
+        rotateSpeed={0.5}
         minDistance={1}
         maxDistance={10}
       />
@@ -85,20 +76,34 @@ function Scene({ isRotating, controlsRef }: { isRotating: boolean; controlsRef: 
 
 interface ThreeJsCubeProps {
   title?: string;
+  orientation?: 'back' | 'bottom';
 }
 
 const ThreeJsCube: React.FC<ThreeJsCubeProps> = ({ 
-  title = "3D Coordinate System"
+  title = "3D Coordinate System",
+  orientation
 }) => {
   const [isRotating, setIsRotating] = useState(true);
   const controlsRef = useRef<any>(null);
 
+  // Adjust camera position based on orientation
+  const initialCameraPosition = useMemo(() => {
+    switch (orientation) {
+      case 'back':
+        return [2, 2, -2];
+      case 'bottom':
+        return [2, -2, 2];
+      default:
+        return [2, 2, 2];
+    }
+  }, [orientation]);
+
   const handleResetView = () => {
     if (controlsRef.current) {
       controlsRef.current.reset();
-      controlsRef.current.setAzimuthalAngle(0);
-      controlsRef.current.setPolarAngle(Math.PI / 4);
-      controlsRef.current.object.position.set(2, 2, 2);
+      controlsRef.current.setAzimuthalAngle(orientation === 'back' ? Math.PI : 0);
+      controlsRef.current.setPolarAngle(orientation === 'bottom' ? Math.PI * 3/4 : Math.PI / 4);
+      controlsRef.current.object.position.set(...initialCameraPosition);
       controlsRef.current.target.set(0, 0, 0);
       controlsRef.current.update();
     }
@@ -120,30 +125,33 @@ const ThreeJsCube: React.FC<ThreeJsCubeProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full h-full bg-gray-900">
-      <div className="text-center py-2">
-        <h2 className="text-white text-xl font-semibold">{title}</h2>
-      </div>
-      
-      <div className="flex-grow relative">
-        <Canvas 
-          shadows
-          camera={{ 
-            fov: 50,
-            near: 0.1,
-            far: 1000
-          }}
-          className="w-full h-full"
-        >
-          <Scene isRotating={isRotating} controlsRef={controlsRef} />
-        </Canvas>
+    <div className="w-full h-full flex flex-col bg-gradient-to-br from-gray-800 to-gray-900">
+      <div className="flex-1 flex flex-col bg-gray-700/50 rounded-xl">
+        <div className="text-white text-center text-xl font-semibold py-2 bg-gray-800/50">
+          {title}
+        </div>
+        
+        <div className="relative flex-1">
+          <Canvas 
+            shadows
+            camera={{ 
+              fov: 50,
+              near: 0.1,
+              far: 1000,
+              position: [2, 2, 2]
+            }}
+            style={{ position: 'absolute', inset: 0 }}
+          >
+            <Scene isRotating={isRotating} controlsRef={controlsRef} />
+          </Canvas>
 
-        <ThreeJsControls 
-          isRotating={isRotating}
-          onToggleRotation={() => setIsRotating(!isRotating)}
-          onResetView={handleResetView}
-          onZoom={handleZoom}
-        />
+          <ThreeJsControls 
+            isRotating={isRotating}
+            onToggleRotation={() => setIsRotating(!isRotating)}
+            onResetView={handleResetView}
+            onZoom={handleZoom}
+          />
+        </div>
       </div>
     </div>
   );

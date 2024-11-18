@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useRef, useState } from "react";
 import CubeControls from "./CubeControls";
@@ -17,12 +17,12 @@ interface WebPageCubeProps {
 
 export default function WebPageCube({
   title = "3D Web Cube",
-  frontComponent = "../CardContent/AbstractSpec",
-  backComponent = "../CardContent/ThreeJsCube",
-  rightComponent = "../CardContent/ConcreteImpl",
-  leftComponent = "../CardContent/SpotifyPlayer",
-  topComponent = "../CardContent/YouTubePlayer",
-  bottomComponent = "../CardContent/ThreeJsCube"
+  frontComponent = "AbstractSpec",
+  backComponent = "ThreeJsCube",
+  rightComponent = "ConcreteImpl",
+  leftComponent = "SpotifyPlayer",
+  topComponent = "YouTubePlayer",
+  bottomComponent = "ThreeJsCube"
 }: WebPageCubeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
@@ -73,6 +73,7 @@ export default function WebPageCube({
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setLastMousePos({ x: e.clientX, y: e.clientY });
+    setIsRotating(false);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -112,12 +113,33 @@ export default function WebPageCube({
     );
   }
 
+  const renderFace = (importPath: string, transform: string, componentProps?: Record<string, any>) => (
+    <div
+      className="absolute inset-0 w-[400px] h-[400px]"
+      style={{
+        transform: `translate(-50%, -50%) ${transform}`,
+        transformStyle: 'preserve-3d',
+        backfaceVisibility: 'hidden',
+      }}
+    >
+      <div 
+        className="absolute inset-0 w-full h-full"
+        style={{ 
+          transformStyle: 'preserve-3d'
+        }}
+      >
+        <MCard importPath={importPath} componentProps={componentProps} />
+      </div>
+    </div>
+  );
+
   return (
     <div 
       className="relative overflow-hidden"
       style={{ 
         height: `${containerHeight}px`,
-        perspective: '500px'
+        perspective: '2000px',
+        transformStyle: 'preserve-3d'
       }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -129,103 +151,45 @@ export default function WebPageCube({
       </div>
       <div 
         ref={containerRef}
-        className="absolute inset-0 preserve-3d"
+        className="absolute inset-0"
         style={{
-          transform: `scale(${scale}) 
-                     rotateX(${rotation.x}deg) 
+          transform: `rotateX(${rotation.x}deg) 
                      rotateY(${rotation.y}deg)`,
           transformOrigin: 'center center',
+          transformStyle: 'preserve-3d',
           transition: 'transform 0.2s ease-out'
         }}
       >
-        <div className="preserve-3d" style={{ position: 'absolute', left: '50%', top: '50%' }}>
+        <div 
+          className="absolute left-1/2 top-1/2 w-full h-full" 
+          style={{ transformStyle: 'preserve-3d' }}
+        >
           {/* Front */}
-          <div
-            className="absolute w-[200px] h-[200px] border-2 border-pink-500 bg-pink-200/20 overflow-hidden"
-            style={{
-              transform: 'translate(-50%, -50%) translateZ(100px)',
-            }}
-          >
-            <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <MCard importPath={frontComponent} />
-            </div>
-          </div>
-
+          {renderFace(frontComponent, 'translateZ(200px)')}
+          
           {/* Back */}
-          <div
-            className="absolute w-[200px] h-[200px] border-2 border-pink-500 bg-pink-200/20 overflow-hidden"
-            style={{
-              transform: 'translate(-50%, -50%) translateZ(-100px) rotateY(180deg)',
-            }}
-          >
-            <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <MCard 
-                importPath={backComponent}
-                componentProps={{
-                  title: "A 3D View"
-                }}
-              />
-            </div>
-          </div>
-
+          {renderFace(backComponent, 'translateZ(-200px) rotateY(180deg)', {
+            title: "A 3D View",
+            orientation: 'back'
+          })}
+          
           {/* Right */}
-          <div
-            className="absolute w-[200px] h-[200px] border-2 border-pink-500 bg-pink-200/20 overflow-hidden"
-            style={{
-              transform: 'translate(-50%, -50%) translateX(100px) rotateY(90deg)',
-            }}
-          >
-            <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <MCard importPath={rightComponent} />
-            </div>
-          </div>
-
+          {renderFace(rightComponent, 'translateX(200px) rotateY(90deg)')}
+          
           {/* Left */}
-          <div
-            className="absolute w-[200px] h-[200px] border-2 border-pink-500 bg-pink-200/20 overflow-hidden"
-            style={{
-              transform: 'translate(-50%, -50%) translateX(-100px) rotateY(-90deg)',
-            }}
-          >
-            <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <MCard importPath={leftComponent} />
-            </div>
-          </div>
-
+          {renderFace(leftComponent, 'translateX(-200px) rotateY(-90deg)')}
+          
           {/* Top */}
-          <div
-            className="absolute w-[200px] h-[200px] border-2 border-pink-500 bg-pink-200/20 overflow-hidden"
-            style={{
-              transform: 'translate(-50%, -50%) translateY(-100px) rotateX(90deg)',
-            }}
-          >
-            <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <MCard 
-                importPath={topComponent}
-                componentProps={{
-                  videoId: "HszHill46_M",
-                  title: "Featured Video"
-                }}
-              />
-            </div>
-          </div>
-
+          {renderFace(topComponent, 'translateY(-200px) rotateX(90deg)', {
+            videoId: "HszHill46_M",
+            title: "Featured Video"
+          })}
+          
           {/* Bottom */}
-          <div
-            className="absolute w-[200px] h-[200px] border-2 border-pink-500 bg-pink-200/20 overflow-hidden"
-            style={{
-              transform: 'translate(-50%, -50%) translateY(100px) rotateX(-90deg)',
-            }}
-          >
-            <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: '400px', height: '400px' }}>
-              <MCard 
-                importPath={bottomComponent}
-                componentProps={{
-                  title: "Bottom View"
-                }}
-              />
-            </div>
-          </div>
+          {renderFace(bottomComponent, 'translateY(200px) rotateX(-90deg)', {
+            title: "Bottom View",
+            orientation: 'bottom'
+          })}
         </div>
       </div>
       <CubeControls
