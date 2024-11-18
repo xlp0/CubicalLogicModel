@@ -23,8 +23,6 @@ interface CardData {
   importPath: string;
   componentProps: {
     title: string;
-    videoId?: string;
-    iconPath?: string;
     [key: string]: any;
   };
   height: string;
@@ -82,24 +80,24 @@ export default function ComponentSelector({ onComponentSelect, title = "Componen
 
   const getComponentIcon = (importPath: string) => {
     const iconMap: { [key: string]: JSX.Element } = {
-      'ThreeJsCube': <FaCube className="w-4 h-4 text-blue-400" />,
-      'YouTubePlayer': <FaYoutube className="w-4 h-4 text-red-500" />,
-      'Calculator': <FaCalculator className="w-4 h-4 text-yellow-400" />,
-      'Notes': <FaFileAlt className="w-4 h-4 text-green-400" />,
-      'Clock': <FaClock className="w-4 h-4 text-blue-400" />,
-      'TodoList': <FaList className="w-4 h-4 text-orange-500" />,
-      'SpotifyPlayer': <FaMusic className="w-4 h-4 text-green-500" />,
-      'LogoDisplay': <FaImage className="w-4 h-4 text-blue-500" />,
-      'Dashboard': <FaChartBar className="w-4 h-4 text-cyan-400" />,
-      'ColorPicker': <FaPalette className="w-4 h-4 text-purple-400" />,
-      'AbstractSpec': <FaCode className="w-4 h-4 text-purple-500" />,
-      'ConcreteImpl': <FaCode className="w-4 h-4 text-indigo-500" />,
-      'TreeView': <FaFolder className="w-4 h-4 text-yellow-500" />,
-      'WebPageCube': <FaCube className="w-4 h-4 text-pink-500" />,
-      'Counter': <FaReact className="w-4 h-4 text-cyan-400 animate-spin-slow" />
+      'ThreeJsCube': <FaCube className="w-5 h-5 text-blue-400 flex-shrink-0" />,
+      'YouTubePlayer': <FaYoutube className="w-5 h-5 text-red-500 flex-shrink-0" />,
+      'Calculator': <FaCalculator className="w-5 h-5 text-yellow-400 flex-shrink-0" />,
+      'Notes': <FaFileAlt className="w-5 h-5 text-green-400 flex-shrink-0" />,
+      'Clock': <FaClock className="w-5 h-5 text-blue-400 flex-shrink-0" />,
+      'TodoList': <FaList className="w-5 h-5 text-orange-500 flex-shrink-0" />,
+      'SpotifyPlayer': <FaMusic className="w-5 h-5 text-green-500 flex-shrink-0" />,
+      'LogoDisplay': <FaImage className="w-5 h-5 text-blue-500 flex-shrink-0" />,
+      'Dashboard': <FaChartBar className="w-5 h-5 text-cyan-400 flex-shrink-0" />,
+      'ColorPicker': <FaPalette className="w-5 h-5 text-purple-400 flex-shrink-0" />,
+      'AbstractSpec': <FaCode className="w-5 h-5 text-purple-500 flex-shrink-0" />,
+      'ConcreteImpl': <FaCode className="w-5 h-5 text-indigo-500 flex-shrink-0" />,
+      'TreeView': <FaFolder className="w-5 h-5 text-yellow-500 flex-shrink-0" />,
+      'WebPageCube': <FaCube className="w-5 h-5 text-pink-500 flex-shrink-0" />,
+      'Counter': <FaReact className="w-5 h-5 text-cyan-400 animate-spin-slow flex-shrink-0" />
     };
 
-    return iconMap[importPath] || <FileText className="w-4 h-4 text-gray-400" />;
+    return iconMap[importPath] || <FileText className="w-5 h-5 text-gray-400 flex-shrink-0" />;
   };
 
   return (
@@ -113,15 +111,17 @@ export default function ComponentSelector({ onComponentSelect, title = "Componen
             <Button
               key={card.uniqueId}
               variant={activeCardId === card.uniqueId ? "secondary" : "ghost"}
-              className={`w-full justify-start gap-2 py-1.5 text-gray-100 transition-colors duration-200 ${
+              className={`w-full justify-start gap-3 py-1.5 text-gray-100 transition-colors duration-200 ${
                 activeCardId === card.uniqueId 
                   ? 'bg-gray-700/90 hover:bg-gray-700' 
                   : 'hover:bg-gray-800/90'
               }`}
               onClick={() => handleSelect(card)}
             >
-              {getComponentIcon(card.importPath)}
-              <span className="text-sm truncate">
+              <div className="flex-shrink-0 w-5">
+                {getComponentIcon(card.importPath)}
+              </div>
+              <span className="text-sm truncate flex-1">
                 {card.componentProps.title || card.title || card.importPath}
               </span>
             </Button>
