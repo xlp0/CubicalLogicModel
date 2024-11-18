@@ -24,6 +24,9 @@ export default function WebPageCube({
   topComponent = "Calculator",
   bottomComponent = "ThreeJsCube"
 }: WebPageCubeProps) {
+  const FACE_SIZE = 400;
+  const TRANSLATE_DISTANCE = FACE_SIZE / 2;
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
@@ -32,11 +35,9 @@ export default function WebPageCube({
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
   const [key, setKey] = useState(0);
 
-  // Ref to store animation frame ID
+  // Animation frame handling
   const animationFrameRef = useRef<number>();
-  // Ref to store last animation timestamp
   const lastTimeRef = useRef<number>(performance.now());
-  // Ref to track component mounted state
   const isMountedRef = useRef<boolean>(true);
 
   useEffect(() => {
@@ -99,6 +100,23 @@ export default function WebPageCube({
     setIsDragging(false);
   }, []);
 
+  const handleToggleRotation = useCallback(() => {
+    setIsRotating(prev => {
+      if (!prev) {
+        // If starting rotation, reset the last time to now
+        lastTimeRef.current = performance.now();
+      }
+      return !prev;
+    });
+  }, []);
+
+  const handleZoom = useCallback((direction: 'in' | 'out') => {
+    setScale(prev => {
+      const newScale = direction === 'in' ? prev * 1.1 : prev * 0.9;
+      return Math.max(0.5, Math.min(2, newScale));
+    });
+  }, []);
+
   const handleReset = useCallback(() => {
     // Cancel any ongoing animation
     if (animationFrameRef.current) {
@@ -132,26 +150,6 @@ export default function WebPageCube({
       animationFrameRef.current = requestAnimationFrame(animate);
     }
   }, [animate, isRotating]);
-
-  const handleToggleRotation = useCallback(() => {
-    setIsRotating(prev => {
-      if (!prev) {
-        // If starting rotation, reset the last time to now
-        lastTimeRef.current = performance.now();
-      }
-      return !prev;
-    });
-  }, []);
-
-  const handleZoom = useCallback((direction: 'in' | 'out') => {
-    setScale(prev => {
-      const newScale = direction === 'in' ? prev * 1.1 : prev * 0.9;
-      return Math.max(0.5, Math.min(2, newScale));
-    });
-  }, []);
-
-  const FACE_SIZE = 400; // Base size for cube faces
-  const TRANSLATE_DISTANCE = FACE_SIZE / 2; // Half the face size for proper cube formation
 
   const renderFace = (
     componentName: string, 
