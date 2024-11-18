@@ -14,10 +14,10 @@ export default function ThreeDViewContainer({
     switch (orientation) {
       case 'front': return '';
       case 'back': return 'rotateY(180deg)';
-      case 'right': return 'rotateZ(90deg)';
+      case 'right': return 'rotateY(-90deg) rotateY(90deg)';
       case 'left': return 'rotateY(90deg)';
       case 'top': return 'rotateX(-90deg)';
-      case 'bottom': return 'rotateZ(90deg)';
+      case 'bottom': return 'rotateZ(0deg) ';
       default: return '';
     }
   };
@@ -26,11 +26,11 @@ export default function ThreeDViewContainer({
   const getAlignmentTransform = (orientation: string): string => {
     switch (orientation) {
       case 'front': return '';
-      case 'back': return 'rotateZ(180deg)';
-      case 'right': return 'rotateZ(-90deg)';
-      case 'left': return 'rotateZ(90deg)';
+      case 'back': return '';
+      case 'right': return 'rotateZ(90deg)';
+      case 'left': return 'rotateZ(-90deg)';
       case 'top': return '';
-      case 'bottom': return 'rotateZ(180deg)';
+      case 'bottom': return '';
       default: return '';
     }
   };

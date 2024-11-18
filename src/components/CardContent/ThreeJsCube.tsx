@@ -69,7 +69,7 @@ function Scene({ isRotating, controlsRef, orientation }: { isRotating: boolean; 
 
   return (
     <>
-      <ambientLight intensity={0.7} />
+      <ambientLight intensity={2.7} />
       <pointLight position={[10, 10, 10]} intensity={0.5} />
       <CoordinateSystem />
       <RotatingCube isRotating={isRotating} />
