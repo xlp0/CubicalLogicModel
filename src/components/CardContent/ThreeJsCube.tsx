@@ -19,13 +19,13 @@ function CoordinateSystem() {
   );
 }
 
-function MiniCube({ isRotating }: CubeProps) {
-  const meshRef = useRef<THREE.Mesh>(null);
+function RotatingCube({ isRotating }: CubeProps) {
+  const groupRef = useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {
-    if (isRotating && meshRef.current) {
-      meshRef.current.rotation.x += delta * 0.5;
-      meshRef.current.rotation.y += delta * 0.7;
+    if (isRotating && groupRef.current) {
+      groupRef.current.rotation.x += delta * 0.5;
+      groupRef.current.rotation.y += delta * 0.7;
     }
   });
 
@@ -39,12 +39,14 @@ function MiniCube({ isRotating }: CubeProps) {
   ];
 
   return (
-    <mesh ref={meshRef}>
-      <boxGeometry args={[0.5, 0.5, 0.5]} />
-      {materials.map((material, index) => (
-        <primitive object={material} attach={`material-${index}`} key={index} />
-      ))}
-    </mesh>
+    <group ref={groupRef}>
+      <mesh>
+        <boxGeometry args={[1.5, 1.5, 1.5]} />
+        {materials.map((material, index) => (
+          <primitive object={material} attach={`material-${index}`} key={index} />
+        ))}
+      </mesh>
+    </group>
   );
 }
 
@@ -52,35 +54,17 @@ function Scene({ isRotating, controlsRef, orientation }: { isRotating: boolean; 
   const { camera } = useThree();
 
   React.useEffect(() => {
-    // Set initial camera position based on orientation
-    switch (orientation) {
-      case 'back':
-        camera.position.set(2, 2, -2);
-        break;
-      case 'bottom':
-        camera.position.set(2, -2, 2);
-        camera.up.set(0, 0, 1);
-        break;
-      case 'right':
-        camera.position.set(2, 2, 0);
-        break;
-      case 'left':
-        camera.position.set(-2, 2, 0);
-        break;
-      case 'top':
-        camera.position.set(2, 2, 2);
-        break;
-      default:
-        camera.position.set(2, 2, 2);
-    }
+    const distance = 4;
+    
+    // Always use front view position for consistency
+    camera.position.set(0, 0, distance);
+    camera.up.set(0, 1, 0);
     camera.lookAt(0, 0, 0);
-  }, [camera, orientation]);
+    camera.updateProjectionMatrix();
 
-  // Reset camera up vector when component unmounts or orientation changes
-  React.useEffect(() => {
-    return () => {
-      camera.up.set(0, 1, 0);
-    };
+    if (controlsRef.current) {
+      controlsRef.current.update();
+    }
   }, [camera, orientation]);
 
   return (
@@ -88,16 +72,17 @@ function Scene({ isRotating, controlsRef, orientation }: { isRotating: boolean; 
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} intensity={0.5} />
       <CoordinateSystem />
-      <MiniCube isRotating={isRotating} />
+      <RotatingCube isRotating={isRotating} />
       <OrbitControls
         ref={controlsRef}
         enableDamping={true}
         dampingFactor={0.05}
         rotateSpeed={0.5}
-        minDistance={1}
+        minDistance={2}
         maxDistance={10}
         enableZoom={true}
         zoomSpeed={0.5}
+        enablePan={false}
       />
     </>
   );
@@ -123,120 +108,29 @@ export default function ThreeJsCube({
     setLocalIsRotating(isRotating);
   }, [isRotating]);
 
-  const handleReset = () => {
-    if (controlsRef.current) {
-      const controls = controlsRef.current;
-      const camera = controls.object;
-
-      // Reset position based on orientation
-      switch (orientation) {
-        case 'back':
-          camera.position.set(2, 2, -2);
-          break;
-        case 'bottom':
-          camera.position.set(2, -2, 2);
-          camera.up.set(0, 0, 1);
-          break;
-        case 'right':
-          camera.position.set(2, 2, 0);
-          break;
-        case 'left':
-          camera.position.set(-2, 2, 0);
-          break;
-        case 'top':
-          camera.position.set(2, 2, 2);
-          break;
-        default:
-          camera.position.set(2, 2, 2);
-      }
-
-      // Reset target and up vector
-      controls.target.set(0, 0, 0);
-      if (orientation !== 'bottom') {
-        camera.up.set(0, 1, 0);
-      }
-
-      // Reset camera direction
-      camera.lookAt(0, 0, 0);
-
-      // Reset zoom
-      camera.zoom = 1;
-      camera.updateProjectionMatrix();
-
-      // Reset controls rotation
-      controls.reset();
-
-      // Force updates
-      controls.update();
-    }
-  };
-
-  const handleZoom = (direction: 'in' | 'out') => {
-    if (controlsRef.current) {
-      const controls = controlsRef.current;
-      const camera = controls.object;
-      
-      // Get current distance from target
-      const distance = controls.getDistance();
-      
-      // Calculate new distance
-      const factor = direction === 'in' ? 0.9 : 1.1;
-      const newDistance = distance * factor;
-      
-      // Update camera position
-      const dir = camera.position.clone().sub(controls.target).normalize();
-      camera.position.copy(controls.target).add(dir.multiplyScalar(newDistance));
-      
-      // Force update
-      camera.updateProjectionMatrix();
-      controls.update();
-    }
-  };
-
-  const handleToggleRotation = () => {
-    setLocalIsRotating(!localIsRotating);
-  };
-
   return (
-    <div
-      className="w-full h-full relative"
-      style={{
-        ...style,
-        backgroundColor: '#1a1a1a'
-      }}
-    >
-      <Canvas 
-        shadows
-        camera={{ 
-          fov: 50,
-          near: 0.1,
-          far: 1000,
-          position: [2, 2, 2]
-        }}
-        style={{ 
-          width: '100%',
-          height: '100%',
-          position: 'absolute',
-          top: 0,
-          left: 0
-        }}
+    <div className="w-full h-full" style={style}>
+      <Canvas
+        camera={{ position: [0, 0, 4], fov: 45 }}
+        style={{ width: '100%', height: '100%' }}
       >
-        <color attach="background" args={['#1a1a1a']} />
-        <Scene isRotating={localIsRotating} controlsRef={controlsRef} orientation={orientation} />
+        <Scene
+          isRotating={localIsRotating}
+          controlsRef={controlsRef}
+          orientation={orientation}
+        />
       </Canvas>
-      
-      {title && (
-        <div className="absolute bottom-2 left-2 text-white text-sm opacity-50 z-10">
-          {title}
-        </div>
-      )}
-
-      <ThreeJsControls
-        isRotating={localIsRotating}
-        onToggleRotation={handleToggleRotation}
-        onResetView={handleReset}
-        onZoom={handleZoom}
-      />
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+        <ThreeJsControls
+          isRotating={localIsRotating}
+          onToggleRotation={() => setLocalIsRotating(!localIsRotating)}
+          onReset={() => {
+            if (controlsRef.current) {
+              controlsRef.current.reset();
+            }
+          }}
+        />
+      </div>
     </div>
   );
 }

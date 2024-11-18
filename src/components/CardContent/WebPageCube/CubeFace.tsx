@@ -43,8 +43,7 @@ export default function CubeFace({ position, rotation = [0, 0, 0], children }: C
       className="absolute w-[400px] h-[400px] bg-white shadow-2xl"
       style={{
         transform: `translate3d(${pos[0] - 200}px, ${pos[1] - 200}px, ${pos[2] - 200}px) 
-                   rotateX(${rot[0]}deg) rotateY(${rot[1]}deg) rotateZ(${rot[2]}deg)
-                   `,
+                   rotateX(${rot[0]}deg) rotateY(${rot[1]}deg) rotateZ(${rot[2]}deg)`,
       }}
     >
       {children}
