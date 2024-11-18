@@ -17,11 +17,11 @@ interface WebPageCubeProps {
 
 export default function WebPageCube({
   title = "3D Web Cube",
-  frontComponent = "AbstractSpec",
+  frontComponent = "ThreeJsCube",
   backComponent = "ThreeJsCube",
-  rightComponent = "ConcreteImpl",
-  leftComponent = "SpotifyPlayer",
-  topComponent = "YouTubePlayer",
+  rightComponent = "ThreeJsCube",
+  leftComponent = "ThreeJsCube",
+  topComponent = "ThreeJsCube",
   bottomComponent = "ThreeJsCube"
 }: WebPageCubeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -113,33 +113,49 @@ export default function WebPageCube({
     );
   }
 
-  const renderFace = (importPath: string, transform: string, componentProps?: Record<string, any>) => (
-    <div
-      className="absolute inset-0 w-[400px] h-[400px]"
-      style={{
-        transform: `translate(-50%, -50%) ${transform}`,
-        transformStyle: 'preserve-3d',
-        backfaceVisibility: 'hidden',
-      }}
-    >
-      <div 
-        className="absolute inset-0 w-full h-full"
-        style={{ 
+  const FACE_SIZE = Math.min(containerHeight - 100, 600); // Responsive face size
+  const TRANSLATE_DISTANCE = FACE_SIZE / 2; // Half of face size for proper spacing
+
+  const renderFace = (importPath: string, transform: string, componentProps?: Record<string, any>) => {
+    const transformValue = transform.replace(/200px/g, `${TRANSLATE_DISTANCE}px`);
+    
+    return (
+      <div
+        className="absolute bg-gray-800/90 rounded-xl overflow-hidden"
+        style={{
+          width: `${FACE_SIZE}px`,
+          height: `${FACE_SIZE}px`,
+          left: '50%',
+          top: '50%',
+          transform: `translate(-50%, -50%) ${transformValue}`,
           transformStyle: 'preserve-3d'
         }}
       >
-        <MCard importPath={importPath} componentProps={componentProps} />
+        <MCard 
+          importPath={importPath} 
+          componentProps={{
+            ...componentProps,
+            orientation: componentProps?.orientation || 'front',
+            style: {
+              width: '100%',
+              height: '100%',
+              transformStyle: 'preserve-3d',
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: 'rgb(31 41 55 / 0.9)' // bg-gray-800/90
+            }
+          }} 
+        />
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div 
-      className="relative overflow-hidden"
+      className="relative w-full bg-gray-900 overflow-hidden"
       style={{ 
         height: `${containerHeight}px`,
-        perspective: '2000px',
-        transformStyle: 'preserve-3d'
+        perspective: `${FACE_SIZE * 4}px`
       }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -149,44 +165,55 @@ export default function WebPageCube({
       <div className="absolute top-4 w-full text-center z-10">
         <h2 className="text-white text-xl font-semibold">{title}</h2>
       </div>
+      
       <div 
         ref={containerRef}
-        className="absolute inset-0"
+        className="absolute inset-0 bg-gray-900/50"
         style={{
-          transform: `rotateX(${rotation.x}deg) 
-                     rotateY(${rotation.y}deg)`,
-          transformOrigin: 'center center',
           transformStyle: 'preserve-3d',
-          transition: 'transform 0.2s ease-out'
+          transform: `scale(${scale})`
         }}
       >
         <div 
-          className="absolute left-1/2 top-1/2 w-full h-full" 
-          style={{ transformStyle: 'preserve-3d' }}
+          className="absolute inset-0"
+          style={{
+            transformStyle: 'preserve-3d',
+            transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+            transition: 'transform 0.2s ease-out'
+          }}
         >
           {/* Front */}
-          {renderFace(frontComponent, 'translateZ(200px)')}
+          {renderFace(frontComponent, `translateZ(${TRANSLATE_DISTANCE}px)`, {
+            title: "Front View",
+            orientation: 'front'
+          })}
           
           {/* Back */}
-          {renderFace(backComponent, 'translateZ(-200px) rotateY(180deg)', {
-            title: "A 3D View",
+          {renderFace(backComponent, `translateZ(-${TRANSLATE_DISTANCE}px) rotateY(180deg)`, {
+            title: "Back View",
             orientation: 'back'
           })}
           
           {/* Right */}
-          {renderFace(rightComponent, 'translateX(200px) rotateY(90deg)')}
+          {renderFace(rightComponent, `translateX(${TRANSLATE_DISTANCE}px) rotateY(90deg)`, {
+            title: "Right View",
+            orientation: 'right'
+          })}
           
           {/* Left */}
-          {renderFace(leftComponent, 'translateX(-200px) rotateY(-90deg)')}
+          {renderFace(leftComponent, `translateX(-${TRANSLATE_DISTANCE}px) rotateY(-90deg)`, {
+            title: "Left View",
+            orientation: 'left'
+          })}
           
           {/* Top */}
-          {renderFace(topComponent, 'translateY(-200px) rotateX(90deg)', {
-            videoId: "HszHill46_M",
-            title: "Featured Video"
+          {renderFace(topComponent, `translateY(-${TRANSLATE_DISTANCE}px) rotateX(90deg)`, {
+            title: "Top View",
+            orientation: 'top'
           })}
           
           {/* Bottom */}
-          {renderFace(bottomComponent, 'translateY(200px) rotateX(-90deg)', {
+          {renderFace(bottomComponent, `translateY(${TRANSLATE_DISTANCE}px) rotateX(-90deg)`, {
             title: "Bottom View",
             orientation: 'bottom'
           })}

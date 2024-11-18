@@ -6,7 +6,9 @@ import type { FC, ComponentProps } from 'react';
 interface MCardProps {
   importPath?: string;
   defaultContent?: FC<any>;
-  componentProps?: ComponentProps<any>;
+  componentProps?: ComponentProps<any> & {
+    style?: React.CSSProperties;
+  };
 }
 
 interface ComponentSelectedEvent extends CustomEvent {
@@ -45,7 +47,6 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
       // Check if this MCard is in the top pane
       if (topPane.contains(cardRef.current)) {
         const { importPath: newImportPath, componentProps: newProps } = e.detail;
-        console.log('Updating top pane component to:', newImportPath, 'with props:', newProps);
         setImportPath(newImportPath);
         setProps(newProps);
       }
@@ -58,7 +59,7 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
   }, []);
 
   const LoadingFallback = () => (
-    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20">
+    <div className="h-full w-full flex items-center justify-center">
       <div className="animate-pulse text-white/50">Loading...</div>
     </div>
   );
@@ -67,7 +68,17 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
   if (defaultContent) {
     const DefaultComponent = defaultContent;
     return (
-      <div ref={cardRef} className="h-full w-full p-2" data-component={importPath}>
+      <div 
+        ref={cardRef} 
+        className="h-full w-full" 
+        style={{ 
+          transformStyle: 'preserve-3d',
+          display: 'flex',
+          flexDirection: 'column',
+          ...props.style 
+        }} 
+        data-component={importPath}
+      >
         <Suspense fallback={<LoadingFallback />}>
           <DefaultComponent {...props} />
         </Suspense>
@@ -84,59 +95,40 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
       
       // Special case for SearchableCardSelector and ComponentSelector
       if (importPath === 'SearchableCardSelector' || importPath === 'ComponentSelector') {
-        return import(`./CardContent/${importPath}`).catch(error => {
-          console.error(`Error loading selector component ${importPath}:`, error);
-          return {
-            default: () => (
-              <div className="p-4 bg-red-500/10 rounded-lg text-red-500">
-                Error loading component: {importPath}
-              </div>
-            )
-          };
-        });
+        return import(`./CardContent/${importPath}`);
       }
 
       // Handle WebPageCube components
       if (importPath.startsWith('WebPageCube/')) {
         const componentName = importPath.split('/')[1];
-        return import(`./CardContent/WebPageCube/${componentName}`).catch(error => {
-          console.error(`Error loading WebPageCube component ${componentName}:`, error);
-          return {
-            default: () => (
-              <div className="p-4 bg-red-500/10 rounded-lg text-red-500">
-                Error loading component: {importPath}
-              </div>
-            )
-          };
-        });
+        return import(`./CardContent/WebPageCube/${componentName}`);
       }
 
-      // For other components
-      return import(`./CardContent/${importPath}`).catch(error => {
-        console.error(`Error loading component ${importPath}:`, error);
-        return {
-          default: () => (
-            <div className="p-4 bg-red-500/10 rounded-lg text-red-500">
-              Error loading component: {importPath}
-            </div>
-          )
-        };
-      });
+      // Default import path
+      return import(`./CardContent/${importPath}`);
     });
   }, [importPath]);
 
   if (!DynamicComponent) {
     return (
-      <div ref={cardRef} className="h-full w-full p-2" data-component={importPath}>
-        <div className="p-4 bg-yellow-500/10 rounded-lg text-yellow-500">
-          No component specified
-        </div>
+      <div ref={cardRef} className="h-full w-full flex items-center justify-center">
+        <div className="text-white/50">No component specified</div>
       </div>
     );
   }
 
   return (
-    <div ref={cardRef} className="h-full w-full p-2" data-component={importPath}>
+    <div 
+      ref={cardRef} 
+      className="h-full w-full" 
+      style={{ 
+        transformStyle: 'preserve-3d',
+        display: 'flex',
+        flexDirection: 'column',
+        ...props.style 
+      }} 
+      data-component={importPath}
+    >
       <Suspense fallback={<LoadingFallback />}>
         <DynamicComponent {...props} />
       </Suspense>

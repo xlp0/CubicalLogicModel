@@ -13,7 +13,7 @@ const navItems: NavItem[] = [
   { name: 'Split View', path: '/SplitView' },
   { name: '3D Page', path: '/3DPage' },
   { name: 'Card Catalog', path: '/MCardCatalog' },
-  { name: 'Cubical Model', path: '/cubical-model' },
+  { name: 'Cubical Model', path: '/PagesOnCube' },
 ];
 
 const FloatingNav: React.FC = () => {
