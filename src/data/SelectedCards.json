@@ -97,7 +97,7 @@
     {
       "importPath": "YouTubePlayer",
       "componentProps": {
-        "title": "NVIDIA CEO Jensen Huang Leaves Everyone SPEECHLESS",
+        "title": "The Universe Will Follow an Oral History with Yohanes Surya",
         "videoId": "JmpBqphgNhc"
       },
       "height": "400px"
@@ -115,6 +115,16 @@
         "title": "Space Age Dashboard"
       },
       "height": "400px"
+    },
+    {
+      "title": "Windsurf Logo",
+      "importPath": "LogoDisplay",
+      "componentProps": {
+        "title": "Windsurf IDE",
+        "iconPath": "/icons/windsurf.svg",
+        "width": 100,
+        "height": 100
+      }
     }
   ]
 }

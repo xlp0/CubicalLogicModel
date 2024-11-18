@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Circle -->
+    <circle cx="50" cy="50" r="48" fill="#1E293B" stroke="#3B82F6" stroke-width="2"/>
+    
+    <!-- Stylized "W" formed by waves -->
+    <path d="M25 30 
+             C30 40, 35 45, 40 30
+             C45 45, 50 40, 55 30
+             C60 45, 65 40, 75 30
+             L72 60
+             C67 70, 62 65, 57 55
+             C52 65, 47 70, 42 55
+             C37 65, 32 70, 28 60
+             Z" 
+          fill="#3B82F6"/>
+    
+    <!-- Surfboard -->
+    <path d="M35 45
+             Q50 40, 65 45
+             L70 65
+             Q50 60, 30 65
+             Z"
+          fill="#60A5FA"
+          transform="rotate(-10, 50, 50)"/>
+    
+    <!-- Wind lines -->
+    <path d="M20 70 Q30 70, 35 68" stroke="#94A3B8" stroke-width="2" fill="none"/>
+    <path d="M25 75 Q35 75, 40 73" stroke="#94A3B8" stroke-width="2" fill="none"/>
+    <path d="M60 68 Q70 70, 80 70" stroke="#94A3B8" stroke-width="2" fill="none"/>
+    <path d="M65 73 Q75 75, 85 75" stroke="#94A3B8" stroke-width="2" fill="none"/>
+</svg>

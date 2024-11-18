@@ -1,54 +1,91 @@
 import { Button } from '@/components/ui/button';
-import { Cube, StickyNote } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-interface ComponentOption {
-  name: string;
-  path: string;
-  icon: React.ReactNode;
-  title: string;
+interface CardData {
+  importPath: string;
+  componentProps: {
+    title: string;
+    [key: string]: any;
+  };
+  height: string;
+  title?: string;
 }
-
-const components: ComponentOption[] = [
-  {
-    name: 'ThreeJsCube',
-    path: '../CardContent/ThreeJsCube',
-    icon: <Cube className="w-4 h-4" />,
-    title: 'A 3D View'
-  },
-  {
-    name: 'Notes',
-    path: '../CardContent/Notes',
-    icon: <StickyNote className="w-4 h-4" />,
-    title: 'Notes'
-  }
-  // Add more components here as needed
-];
 
 interface ComponentSelectorProps {
-  onSelect: (component: ComponentOption) => void;
-  activeComponent: string;
+  onComponentSelect?: (componentName: string) => void;
+  title?: string;
 }
 
-export default function ComponentSelector({ onSelect, activeComponent }: ComponentSelectorProps) {
+interface CardWithId extends CardData {
+  uniqueId: string;
+}
+
+export default function ComponentSelector({ onComponentSelect, title = "Selected Cards" }: ComponentSelectorProps) {
+  const [cards, setCards] = useState<CardWithId[]>([]);
+  const [activeCardId, setActiveCardId] = useState<string>();
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const response = await fetch('/src/data/SelectedCards.json');
+        const data = await response.json();
+        // Add unique IDs to each card
+        const cardsWithIds = data.cards.map((card: CardData, index: number) => ({
+          ...card,
+          uniqueId: `${card.importPath}-${index}`
+        }));
+        setCards(cardsWithIds);
+      } catch (error) {
+        console.error('Error loading cards:', error);
+      }
+    };
+
+    fetchCards();
+  }, []);
+
+  const handleSelect = (card: CardWithId) => {
+    setActiveCardId(card.uniqueId);
+    
+    // Create a custom event with both the component name and its props
+    const event = new CustomEvent('componentSelected', { 
+      detail: {
+        importPath: card.importPath,
+        componentProps: card.componentProps
+      },
+      bubbles: true,
+      composed: true
+    });
+    document.dispatchEvent(event);
+    
+    if (onComponentSelect) {
+      onComponentSelect(card.importPath);
+    }
+  };
+
   return (
-    <div className="absolute right-4 top-1/2 -translate-y-1/2 bg-gray-800/80 backdrop-blur-sm rounded-lg p-2 shadow-lg">
-      <h3 className="text-white text-sm font-semibold mb-2 px-2">Components</h3>
-      <div className="space-y-1">
-        {components.map((component) => (
-          <Button
-            key={component.name}
-            variant={activeComponent === component.path ? "secondary" : "ghost"}
-            className={`w-full justify-start gap-2 ${
-              activeComponent === component.path
-                ? 'bg-gray-600'
-                : 'hover:bg-gray-700'
-            }`}
-            onClick={() => onSelect(component)}
-          >
-            {component.icon}
-            <span className="text-sm">{component.name}</span>
-          </Button>
-        ))}
+    <div className="h-full flex flex-col bg-gray-800/80">
+      <div className="p-4 border-b border-gray-700">
+        <h3 className="text-white text-sm font-semibold">{title}</h3>
+      </div>
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+        <div className="p-2 space-y-1">
+          {cards.map((card) => (
+            <Button
+              key={card.uniqueId}
+              variant={activeCardId === card.uniqueId ? "secondary" : "ghost"}
+              className={`w-full justify-start gap-2 py-1 ${
+                activeCardId === card.uniqueId ? 'bg-gray-600' : 'hover:bg-gray-700'
+              }`}
+              onClick={() => handleSelect(card)}
+            >
+              <FileText className="w-4 h-4 text-blue-500" />
+              <span className="text-sm truncate">
+                {card.componentProps.title || card.title || card.importPath}
+              </span>
+            </Button>
+          ))}
+        </div>
       </div>
     </div>
   );

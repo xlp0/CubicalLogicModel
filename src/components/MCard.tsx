@@ -9,6 +9,13 @@ interface MCardProps {
   componentProps?: ComponentProps<any>;
 }
 
+interface ComponentSelectedEvent extends CustomEvent {
+  detail: {
+    importPath: string;
+    componentProps: Record<string, any>;
+  };
+}
+
 const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, componentProps = {} }) => {
   const [importPath, setImportPath] = useState(initialImportPath);
   const [props, setProps] = useState(componentProps);
@@ -16,7 +23,7 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
 
   // Listen for component selection events
   useEffect(() => {
-    const handleComponentSelected = (e: CustomEvent) => {
+    const handleComponentSelected = (e: ComponentSelectedEvent) => {
       if (!cardRef.current) return;
 
       // Check if this MCard is in the top pane
@@ -28,10 +35,10 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
 
       // Only update if this MCard is in the top pane
       if (topPane.contains(cardRef.current)) {
-        const componentName = e.detail;
-        console.log('Updating top pane component to:', componentName);
-        setImportPath(componentName);
-        setProps({ title: componentName });
+        const { importPath: newImportPath, componentProps: newProps } = e.detail;
+        console.log('Updating top pane component to:', newImportPath, 'with props:', newProps);
+        setImportPath(newImportPath);
+        setProps(newProps);
       }
     };
 
@@ -59,44 +66,34 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
     );
   }
 
-  // Otherwise, use dynamic import
-  const Component = useMemo(() => 
-    lazy(async () => {
-      if (!importPath) {
-        return {
-          default: () => (
-            <div className="p-4 bg-yellow-500/10 rounded-lg text-yellow-500">
-              No component specified
-            </div>
-          )
-        };
-      }
+  // Dynamic import for the component
+  const DynamicComponent = useMemo(() => {
+    if (!importPath) return null;
 
-      try {
-        console.log('Attempting to import:', importPath);
-        // Use dynamic import with full path
-        const module = await import(/* @vite-ignore */ `./CardContent/${importPath}`);
-        console.log('Module loaded successfully:', module);
-        return module;
-      } catch (error) {
-        console.error('Error loading component:', error);
-        return {
-          default: () => (
-            <div className="p-4 bg-red-500/10 rounded-lg text-red-500">
-              Error loading component: {importPath}
-              <pre className="mt-2 text-sm opacity-75">{error.message}</pre>
-            </div>
-          )
-        };
-      }
-    }),
-    [importPath]
-  );
+    return lazy(() => {
+      console.log('Loading component:', importPath);
+      return import(/* @vite-ignore */ `./CardContent/${importPath}`)
+        .catch(error => {
+          console.error(`Error loading component ${importPath}:`, error);
+          return { default: () => <div>Error loading component</div> };
+        });
+    });
+  }, [importPath]);
+
+  if (!DynamicComponent) {
+    return (
+      <div ref={cardRef} className="h-full w-full p-2" data-component={importPath}>
+        <div className="p-4 bg-yellow-500/10 rounded-lg text-yellow-500">
+          No component specified
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={cardRef} className="h-full w-full p-2" data-component={importPath}>
       <Suspense fallback={<LoadingFallback />}>
-        <Component {...props} />
+        <DynamicComponent {...props} />
       </Suspense>
     </div>
   );
