@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import ReactYoutube from 'react-youtube';
+import YouTube from 'react-youtube';
 
 interface YouTubePlayerProps {
   videoId?: string;
@@ -58,7 +58,7 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
         <h2 className="text-lg font-semibold">{title}</h2>
       </div>
       <div className="flex-grow relative">
-        <ReactYoutube
+        <YouTube
           videoId={videoId}
           opts={opts}
           onReady={onReady}

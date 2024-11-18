@@ -1,125 +1,116 @@
-'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronDown, Folder, FileText } from 'lucide-react';
 
 interface TreeNode {
   id: string;
   name: string;
-  type: 'file' | 'folder';
+  type: 'folder' | 'file';
   children?: TreeNode[];
 }
 
 interface TreeViewProps {
-  data?: TreeNode[];
-  onSelect?: (node: TreeNode) => void;
+  title?: string;
+  onComponentSelect?: (componentName: string) => void;
 }
 
-const sampleData: TreeNode[] = [
+const cardComponents: TreeNode[] = [
   {
-    id: '1',
-    name: 'Project Files',
+    id: 'components',
+    name: 'Components',
     type: 'folder',
     children: [
+      { id: 'abstractspec', name: 'AbstractSpec', type: 'file' },
+      { id: 'calculator', name: 'Calculator', type: 'file' },
+      { id: 'clock', name: 'Clock', type: 'file' },
+      { id: 'colorpicker', name: 'ColorPicker', type: 'file' },
+      { id: 'componentselector', name: 'ComponentSelector', type: 'file' },
+      { id: 'concreteimpl', name: 'ConcreteImpl', type: 'file' },
+      { id: 'counter', name: 'Counter', type: 'file' },
+      { id: 'dashboard', name: 'Dashboard', type: 'file' },
+      { id: 'notes', name: 'Notes', type: 'file' },
+      { id: 'realisticexpectations', name: 'RealisticExpectations', type: 'file' },
+      { id: 'spotifyplayer', name: 'SpotifyPlayer', type: 'file' },
+      { id: 'threejscontrols', name: 'ThreeJsControls', type: 'file' },
+      { id: 'threejscube', name: 'ThreeJsCube', type: 'file' },
+      { id: 'todolist', name: 'TodoList', type: 'file' },
+      { id: 'treeview', name: 'TreeView', type: 'file' },
+      { id: 'youtubeplayer', name: 'YouTubePlayer', type: 'file' },
       {
-        id: '2',
-        name: 'Components',
+        id: 'webpagecube',
+        name: 'WebPageCube',
         type: 'folder',
         children: [
-          { id: '3', name: 'ThreeJsCube.tsx', type: 'file' },
-          { id: '4', name: 'YouTubePlayer.tsx', type: 'file' },
-          { id: '5', name: 'Calculator.tsx', type: 'file' }
-        ]
-      },
-      {
-        id: '6',
-        name: 'Layouts',
-        type: 'folder',
-        children: [
-          { id: '7', name: 'SingleCardLayout.astro', type: 'file' },
-          { id: '8', name: 'SplitViewLayout.astro', type: 'file' }
+          { id: 'webpagecube-main', name: 'WebPageCube', type: 'file' },
+          { id: 'cubecontrols', name: 'CubeControls', type: 'file' },
+          { id: 'cubeface', name: 'CubeFace', type: 'file' }
         ]
       }
     ]
   }
 ];
 
-const TreeNode = React.memo(({ 
-  node, 
-  level = 0, 
-  onSelect 
-}: { 
-  node: TreeNode; 
-  level?: number; 
-  onSelect?: (node: TreeNode) => void;
-}) => {
-  console.log('Rendering node:', node.name, 'type:', node.type);
-  const [expanded, setExpanded] = useState(true);
-  const indent = level * 20;
+interface TreeNodeComponentProps {
+  node: TreeNode;
+  onFileClick: (node: TreeNode) => void;
+}
+
+const TreeNodeComponent: React.FC<TreeNodeComponentProps> = ({ node, onFileClick }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const hasChildren = node.children && node.children.length > 0;
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (node.type === 'folder') {
-      console.log('Toggling folder:', node.name, 'from:', expanded, 'to:', !expanded);
-      setExpanded(!expanded);
-    } else if (onSelect) {
-      onSelect(node);
+    if (hasChildren) {
+      setIsOpen(!isOpen);
+    } else {
+      onFileClick(node);
     }
   };
 
   return (
-    <div className="select-none">
+    <div className="pl-4">
       <div 
-        className={`
-          flex items-center py-1 px-2 hover:bg-gray-700 cursor-pointer
-          ${node.type === 'file' ? 'text-gray-300 hover:text-blue-400' : 'text-gray-200'}
-        `}
-        style={{ paddingLeft: `${indent}px` }}
+        className="flex items-center py-1 hover:bg-gray-700 rounded cursor-pointer" 
         onClick={handleClick}
       >
-        {node.type === 'folder' && (
-          expanded ? (
-            <ChevronDown className="w-4 h-4 mr-1 text-gray-400" />
-          ) : (
-            <ChevronRight className="w-4 h-4 mr-1 text-gray-400" />
-          )
+        {hasChildren ? (
+          isOpen ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />
+        ) : (
+          <span className="w-4" />
         )}
         {node.type === 'folder' ? (
-          <Folder className="w-4 h-4 mr-2 text-yellow-400" />
+          <Folder className="w-4 h-4 text-yellow-500 mr-2" />
         ) : (
-          <FileText className="w-4 h-4 mr-2 text-blue-400" />
+          <FileText className="w-4 h-4 text-blue-500 mr-2" />
         )}
-        <span>{node.name}</span>
+        <span className="text-sm text-gray-300">{node.name}</span>
       </div>
-
-      {node.type === 'folder' && expanded && node.children && (
-        <div className="ml-2 border-l border-gray-700">
-          {node.children.map(child => (
-            <TreeNode
-              key={child.id}
-              node={child}
-              level={level + 1}
-              onSelect={onSelect}
-            />
+      {isOpen && hasChildren && (
+        <div className="ml-2">
+          {node.children?.map((child) => (
+            <TreeNodeComponent key={child.id} node={child} onFileClick={onFileClick} />
           ))}
         </div>
       )}
     </div>
   );
-});
+};
 
-TreeNode.displayName = 'TreeNode';
+const TreeView: React.FC<TreeViewProps> = ({ title = "Components", onComponentSelect }) => {
+  const handleFileClick = (node: TreeNode) => {
+    const event = new CustomEvent('componentSelected', { 
+      detail: node.name,
+      bubbles: true,
+      composed: true
+    });
+    document.dispatchEvent(event);
+  };
 
-const TreeView: React.FC<TreeViewProps> = ({ data = sampleData, onSelect }) => {
-  console.log('Rendering TreeView with data:', data);
   return (
-    <div className="h-full bg-gray-800 text-sm overflow-y-auto p-2">
-      {data.map(node => (
-        <TreeNode
-          key={node.id}
-          node={node}
-          onSelect={onSelect}
-        />
+    <div className="h-full bg-gray-800 text-white p-4">
+      <h2 className="text-lg font-semibold mb-4">{title}</h2>
+      {cardComponents.map((node) => (
+        <TreeNodeComponent key={node.id} node={node} onFileClick={handleFileClick} />
       ))}
     </div>
   );

@@ -1,18 +1,24 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import react from '@astrojs/react';
+import react from "@astrojs/react";
+import tailwind from "@astrojs/tailwind";
 
+// https://astro.build/config
 export default defineConfig({
   server: {
     host: '0.0.0.0'
   },
-  integrations: [
-    tailwind(),
-    react(),
-  ],
+  integrations: [react(), tailwind()],
   vite: {
     ssr: {
       noExternal: ['@radix-ui/*', 'class-variance-authority']
+    },
+    optimizeDeps: {
+      include: ['react-split-it']
+    },
+    build: {
+      commonjsOptions: {
+        include: [/react-split-it/]
+      }
     }
   },
   devToolbar: {

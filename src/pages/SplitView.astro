@@ -1,29 +1,30 @@
 ---
-import SplitViewLayout from '../layouts/SplitViewLayout.astro';
+import SplitLayout from '../components/SplitLayout';
+import ResizeHandler from '../components/ResizeHandler';
+
+const defaultComponent = "Notes";
 
 const panes = [
   {
     importPath: "TreeView",
     width: "250px",
     minWidth: "200px",
-    flex: 0,
     componentProps: {
       title: "Project Explorer"
     }
   },
   {
-    width: "auto",
+    width: "calc(100% - 650px)",
     minWidth: "400px",
-    flex: 2,
     split: {
       direction: 'horizontal',
-      sizes: [50, 50],
+      sizes: [1, 1],
       panes: [
         {
-          importPath: "ThreeJsCube",
+          importPath: defaultComponent,
           minWidth: "300px",
           componentProps: {
-            title: "3D View Top"
+            title: defaultComponent
           }
         },
         {
@@ -40,7 +41,6 @@ const panes = [
     importPath: "YouTubePlayer",
     width: "400px",
     minWidth: "300px",
-    flex: 1,
     componentProps: {
       title: "Tutorial",
       videoId: "LWQqE2JcDSQ"
@@ -49,7 +49,130 @@ const panes = [
 ];
 ---
 
-<SplitViewLayout 
-  title="Split View" 
-  panes={panes}
-/>
+<div class="h-screen bg-gray-900">
+  <SplitLayout client:only="react" panes={panes} />
+  <ResizeHandler client:only="react" />
+</div>
+
+<style>
+  :global(.split-container) {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  :global(.pane) {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :global(.pane-content) {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    overflow: hidden;
+  }
+
+  :global(.split-pane) {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(.split-pane.vertical) {
+    flex-direction: row;
+  }
+
+  :global(.split-pane.horizontal) {
+    flex-direction: column;
+  }
+
+  :global(.split-pane-child) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  :global(.split-pane.vertical > .split-pane-child) {
+    height: 100%;
+  }
+
+  :global(.split-pane.horizontal > .split-pane-child) {
+    width: 100%;
+  }
+
+  :global(.resizer) {
+    background: #2a2a2a;
+    transition: background-color 0.2s ease;
+    z-index: 10;
+    flex: none;
+    position: relative;
+  }
+
+  :global(.resizer.vertical) {
+    cursor: col-resize;
+    width: 8px;  
+    height: 100%;
+    margin: 0 -2px;  
+  }
+
+  :global(.resizer.horizontal) {
+    cursor: row-resize;
+    height: 8px;  
+    width: 100%;
+    margin: -2px 0;  
+  }
+
+  :global(.resizer:hover) {
+    background: #3a3a3a;
+  }
+
+  :global(.resizer.vertical:hover) {
+    width: 12px;  
+    margin: 0 -4px;  
+  }
+
+  :global(.resizer.horizontal:hover) {
+    height: 12px;  
+    margin: -4px 0;  
+  }
+
+  :global(.resizer::after) {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -8px;  
+    right: -8px;  
+    bottom: 0;
+    cursor: inherit;
+  }
+
+  :global(.resizer-handle) {
+    position: absolute;
+    background: #4a4a4a;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  :global(.resizer.vertical .resizer-handle) {
+    width: 2px;
+    height: 40px;
+  }
+
+  :global(.resizer.horizontal .resizer-handle) {
+    width: 40px;
+    height: 2px;
+  }
+
+  :global(.resizer:hover .resizer-handle) {
+    opacity: 1;
+  }
+</style>
