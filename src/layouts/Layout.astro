@@ -4,6 +4,7 @@ interface Props {
 }
 
 const { title } = Astro.props;
+import FloatingNav from '../components/FloatingNav';
 ---
 
 <!doctype html>
@@ -13,9 +14,11 @@ const { title } = Astro.props;
     <meta name="description" content="Cubical Logic Model - An interactive 3D cube interface" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
   <body class="h-screen bg-gray-900">
+    <FloatingNav client:only="react" />
     <slot />
   </body>
 </html>
@@ -39,21 +42,13 @@ const { title } = Astro.props;
     }
   }
 
-  @layer utilities {
-    .perspective-1000 {
-      perspective: 1000px;
-    }
-    
-    .preserve-3d {
-      transform-style: preserve-3d;
-      -webkit-transform-style: preserve-3d;
-    }
-  }
-
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
   }
 </style>

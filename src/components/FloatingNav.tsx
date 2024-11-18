@@ -13,7 +13,7 @@ const navItems: NavItem[] = [
   { name: 'Split View', path: '/SplitView' },
   { name: '3D Page', path: '/3DPage' },
   { name: 'Card Catalog', path: '/MCardCatalog' },
-  { name: 'Cubical Model', path: '/PagesOnCube' },
+  { name: 'Pages On Cube', path: '/PagesOnCube' },
 ];
 
 const FloatingNav: React.FC = () => {
@@ -24,7 +24,7 @@ const FloatingNav: React.FC = () => {
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg shadow-lg transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-gray-800/90 hover:bg-gray-700/90 text-gray-200 rounded-lg shadow-lg transition-colors backdrop-blur-sm"
         >
           <Menu size={16} />
           <span>Navigation</span>
@@ -35,13 +35,13 @@ const FloatingNav: React.FC = () => {
         </button>
 
         {isOpen && (
-          <div className="absolute left-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+          <div className="absolute left-0 mt-2 w-48 bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden">
             <div className="py-1">
               {navItems.map((item) => (
                 <a
                   key={item.path}
                   href={item.path}
-                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition-colors"
+                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/90 transition-colors"
                 >
                   {item.name}
                 </a>
