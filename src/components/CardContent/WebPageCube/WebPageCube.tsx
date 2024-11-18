@@ -24,9 +24,6 @@ export default function WebPageCube({
   topComponent = "Calculator",
   bottomComponent = "ThreeJsCube"
 }: WebPageCubeProps) {
-  const FACE_SIZE = 400;
-  const TRANSLATE_DISTANCE = FACE_SIZE / 2;
-  
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
@@ -35,9 +32,11 @@ export default function WebPageCube({
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
   const [key, setKey] = useState(0);
 
-  // Animation frame handling
+  // Ref to store animation frame ID
   const animationFrameRef = useRef<number>();
+  // Ref to store last animation timestamp
   const lastTimeRef = useRef<number>(performance.now());
+  // Ref to track component mounted state
   const isMountedRef = useRef<boolean>(true);
 
   useEffect(() => {
@@ -100,23 +99,6 @@ export default function WebPageCube({
     setIsDragging(false);
   }, []);
 
-  const handleToggleRotation = useCallback(() => {
-    setIsRotating(prev => {
-      if (!prev) {
-        // If starting rotation, reset the last time to now
-        lastTimeRef.current = performance.now();
-      }
-      return !prev;
-    });
-  }, []);
-
-  const handleZoom = useCallback((direction: 'in' | 'out') => {
-    setScale(prev => {
-      const newScale = direction === 'in' ? prev * 1.1 : prev * 0.9;
-      return Math.max(0.5, Math.min(2, newScale));
-    });
-  }, []);
-
   const handleReset = useCallback(() => {
     // Cancel any ongoing animation
     if (animationFrameRef.current) {
@@ -150,6 +132,26 @@ export default function WebPageCube({
       animationFrameRef.current = requestAnimationFrame(animate);
     }
   }, [animate, isRotating]);
+
+  const handleToggleRotation = useCallback(() => {
+    setIsRotating(prev => {
+      if (!prev) {
+        // If starting rotation, reset the last time to now
+        lastTimeRef.current = performance.now();
+      }
+      return !prev;
+    });
+  }, []);
+
+  const handleZoom = useCallback((direction: 'in' | 'out') => {
+    setScale(prev => {
+      const newScale = direction === 'in' ? prev * 1.1 : prev * 0.9;
+      return Math.max(0.5, Math.min(2, newScale));
+    });
+  }, []);
+
+  const FACE_SIZE = 400; // Base size for cube faces
+  const TRANSLATE_DISTANCE = FACE_SIZE / 2; // Half the face size for proper cube formation
 
   const renderFace = (
     componentName: string, 
@@ -211,7 +213,46 @@ export default function WebPageCube({
       <div className="absolute top-4 w-full text-center z-10">
         <h2 className="text-white text-xl font-semibold">{title}</h2>
       </div>
-      
+
+      <div className="absolute inset-0 flex items-center justify-center" 
+        style={{ 
+          transformStyle: 'preserve-3d',
+          pointerEvents: 'none',
+          transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`
+        }}
+      >
+        {/* X-axis (red) */}
+        <div style={{
+          position: 'absolute',
+          width: '100vw',
+          height: '15px',
+          backgroundColor: '#ff0000',
+          opacity: 0.3,
+          transformStyle: 'preserve-3d'
+        }} />
+        
+        {/* Y-axis (green) */}
+        <div style={{
+          position: 'absolute',
+          width: '5px',
+          height: '100vh',
+          backgroundColor: '#00ff00',
+          opacity: 0.3,
+          transformStyle: 'preserve-3d'
+        }} />
+        
+        {/* Z-axis (blue) */}
+        <div style={{
+          position: 'absolute',
+          width: '5px',
+          height: '100vh',
+          backgroundColor: '#0000ff',
+          opacity: 0.3,
+          transformStyle: 'preserve-3d',
+          transform: 'rotateX(90deg)'
+        }} />
+      </div>
+
       <div 
         ref={containerRef}
         className="relative"
