@@ -95,9 +95,19 @@
       "height": "400px"
     },
     {
+      "title": "Youtube Logo",
+      "importPath": "LogoDisplay",
+      "componentProps": {
+        "title": "YouTube Logo",
+        "iconPath": "/icons/YouTube-Logo.wine.png",
+        "width": 100,
+        "height": 100
+      }
+    },
+    {
       "importPath": "YouTubePlayer",
       "componentProps": {
-        "title": "The Universe Will Follow an Oral History with Yohanes Surya",
+        "title": "NVIDIA CEO Jensen Huang Leaves Everyone SPEECHLESS",
         "videoId": "JmpBqphgNhc"
       },
       "height": "400px"
