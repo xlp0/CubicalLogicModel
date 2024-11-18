@@ -221,8 +221,11 @@ export default function WebPageCube({
           width: `${FACE_SIZE}px`,
           height: `${FACE_SIZE}px`,
           transformStyle: 'preserve-3d',
-          transform: `scale(${scale}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-          transition: isDragging ? 'none' : 'transform 0.2s ease-out'
+          transform: `translate(-${FACE_SIZE / 2}px, -${FACE_SIZE / 2}px) scale(${scale}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+          transition: isDragging ? 'none' : 'transform 0.2s ease-out',
+          position: 'absolute',
+          left: '50%',
+          top: '50%'
         }}
       >
         {renderFace(frontComponent, 'front', "Front View")}
