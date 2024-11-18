@@ -25,7 +25,7 @@
     {
       "importPath": "Notes",
       "componentProps": {
-        "title": "Real-time Clock"
+        "title": "Notes"
       },
       "height": "400px"
     },
@@ -47,14 +47,14 @@
     {
       "importPath": "Counter",
       "componentProps": {
-        "title": "Interactive Calculator"
+        "title": "Counter"
       },
       "height": "400px"
     },
     {
       "importPath": "TodoList",
       "componentProps": {
-        "title": "Real-time Clock"
+        "title": "ToDo App"
       },
       "height": "400px"
     },
