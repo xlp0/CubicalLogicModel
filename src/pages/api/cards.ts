@@ -16,7 +16,8 @@ export const GET: APIRoute = async ({ request }) => {
     console.log('[API] Search query:', rawQuery);
     console.groupEnd();
 
-    if (rawQuery && rawQuery.length < 2) {
+    // Only validate length if query is not empty or null
+    if (rawQuery !== null && rawQuery !== '' && rawQuery.length < 2) {
       return new Response(JSON.stringify({
         success: false,
         error: 'Search query must be at least 2 characters long',
@@ -33,7 +34,7 @@ export const GET: APIRoute = async ({ request }) => {
     }
 
     dbService = new CardDbService();
-    const cards = dbService.searchCards(rawQuery || '');
+    const cards = dbService.searchCards(rawQuery);
     console.log('[API] Found cards:', cards.length);
 
     return new Response(JSON.stringify({

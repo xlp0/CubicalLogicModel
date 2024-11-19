@@ -30,19 +30,14 @@ class CardDbService {
     }));
   }
 
-  public searchCards(query: string): CardData[] {
+  public searchCards(query: string | null): CardData[] {
     console.log('[DB] Starting search with query:', query);
-    const normalizedQuery = query.toLowerCase().trim();
+    const normalizedQuery = query?.toLowerCase().trim() || '';
     
     try {
       if (!normalizedQuery) {
         console.log('[DB] Empty query, returning all cards');
-        const stmt = this.db.prepare('SELECT * FROM cards');
-        const cards = stmt.all() as CardData[];
-        return cards.map(card => ({
-          ...card,
-          componentProps: JSON.parse(card.componentProps)
-        }));
+        return this.getAllCards();
       }
       
       // Use SQL LIKE for more efficient searching

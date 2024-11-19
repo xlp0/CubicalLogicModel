@@ -5,6 +5,7 @@ interface Props {
 
 const { title } = Astro.props;
 import FloatingNav from '../components/FloatingNav';
+import '../styles/globals.css';
 ---
 
 <!doctype html>
@@ -24,10 +25,6 @@ import FloatingNav from '../components/FloatingNav';
 </html>
 
 <style is:global>
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-
   :root {
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 214, 219, 220;
