@@ -93,8 +93,8 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
     return lazy(() => {
       console.log('Loading component:', importPath);
       
-      // Special case for SearchableCardSelector and ComponentSelector
-      if (importPath === 'SearchableCardSelector' || importPath === 'ComponentSelector') {
+      // Special case for SearchableCardSelector, ComponentSelector and SearchableCardsFromDB
+      if (importPath === 'SearchableCardSelector' || importPath === 'ComponentSelector' || importPath === 'SearchableCardsFromDB') {
         return import(`./CardContent/${importPath}`);
       }
 

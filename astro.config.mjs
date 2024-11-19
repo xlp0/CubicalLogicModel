@@ -4,6 +4,7 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'server', // Enable server-side rendering
   server: {
     host: '0.0.0.0'
   },
