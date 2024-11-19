@@ -52,9 +52,9 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
       }
     };
 
-    document.addEventListener('componentSelected', handleComponentSelected as EventListener);
+    window.addEventListener('componentSelected', handleComponentSelected as EventListener);
     return () => {
-      document.removeEventListener('componentSelected', handleComponentSelected as EventListener);
+      window.removeEventListener('componentSelected', handleComponentSelected as EventListener);
     };
   }, []);
 
