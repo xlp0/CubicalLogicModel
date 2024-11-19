@@ -11,52 +11,14 @@ interface MCardProps {
   };
 }
 
-interface ComponentSelectedEvent extends CustomEvent {
-  detail: {
-    importPath: string;
-    componentProps: Record<string, any>;
-  };
-}
-
 const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, componentProps = {} }) => {
-  const [importPath, setImportPath] = useState(initialImportPath);
   const [props, setProps] = useState(componentProps);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Listen for component selection events
+  // Update props when componentProps changes
   useEffect(() => {
-    const handleComponentSelected = (e: ComponentSelectedEvent) => {
-      if (!cardRef.current) return;
-
-      // Find the closest split container
-      const splitContainer = cardRef.current.closest('.split.horizontal');
-      if (!splitContainer) return;
-
-      // Get all vertical splits that are direct children of the horizontal split
-      const verticalSplits = Array.from(splitContainer.querySelectorAll(':scope > .split.vertical'));
-      
-      // Find the middle vertical split (in a three-pane layout)
-      const middleVerticalSplit = verticalSplits[0];
-      if (!middleVerticalSplit) return;
-
-      // Get the top pane of the middle vertical split
-      const verticalPanes = middleVerticalSplit.querySelectorAll(':scope > .split-pane');
-      const topPane = verticalPanes[0];
-      if (!topPane) return;
-
-      // Check if this MCard is in the top pane
-      if (topPane.contains(cardRef.current)) {
-        const { importPath: newImportPath, componentProps: newProps } = e.detail;
-        setImportPath(newImportPath);
-        setProps(newProps);
-      }
-    };
-
-    window.addEventListener('componentSelected', handleComponentSelected as EventListener);
-    return () => {
-      window.removeEventListener('componentSelected', handleComponentSelected as EventListener);
-    };
-  }, []);
+    setProps(componentProps);
+  }, [componentProps]);
 
   const LoadingFallback = () => (
     <div className="h-full w-full flex items-center justify-center">
@@ -77,7 +39,7 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
           flexDirection: 'column',
           ...props.style 
         }} 
-        data-component={importPath}
+        data-component={initialImportPath}
       >
         <Suspense fallback={<LoadingFallback />}>
           <DefaultComponent {...props} />
@@ -88,26 +50,26 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
 
   // Dynamic import for the component
   const DynamicComponent = useMemo(() => {
-    if (!importPath) return null;
+    if (!initialImportPath) return null;
 
     return lazy(() => {
-      console.log('Loading component:', importPath);
+      console.log('Loading component:', initialImportPath);
       
       // Special case for SearchableCardSelector, ComponentSelector and SearchableCardsFromDB
-      if (importPath === 'SearchableCardSelector' || importPath === 'ComponentSelector' || importPath === 'SearchableCardsFromDB') {
-        return import(`./CardContent/${importPath}`);
+      if (initialImportPath === 'SearchableCardSelector' || initialImportPath === 'ComponentSelector' || initialImportPath === 'SearchableCardsFromDB') {
+        return import(`./CardContent/${initialImportPath}`);
       }
 
       // Handle WebPageCube components
-      if (importPath.startsWith('WebPageCube/')) {
-        const componentName = importPath.split('/')[1];
+      if (initialImportPath.startsWith('WebPageCube/')) {
+        const componentName = initialImportPath.split('/')[1];
         return import(`./CardContent/WebPageCube/${componentName}`);
       }
 
       // Default import path
-      return import(`./CardContent/${importPath}`);
+      return import(`./CardContent/${initialImportPath}`);
     });
-  }, [importPath]);
+  }, [initialImportPath]);
 
   if (!DynamicComponent) {
     return (
@@ -127,7 +89,7 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
         flexDirection: 'column',
         ...props.style 
       }} 
-      data-component={importPath}
+      data-component={initialImportPath}
     >
       <Suspense fallback={<LoadingFallback />}>
         <DynamicComponent {...props} />

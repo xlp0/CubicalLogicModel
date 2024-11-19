@@ -13,6 +13,7 @@ const navItems: NavItem[] = [
   { name: 'Split View', path: '/SplitView' },
   { name: '3D Page', path: '/3DPage' },
   { name: 'Card Catalog', path: '/MCardCatalog' },
+  { name: 'Paginated Cards', path: '/PaginatedCards' },
   { name: 'Pages On Cube', path: '/PagesOnCube' },
 ];
 

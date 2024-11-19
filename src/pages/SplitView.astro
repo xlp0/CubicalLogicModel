@@ -23,7 +23,7 @@ const panes = [
       sizes: [50, 50],
       panes: [
         {
-          importPath: defaultComponent,
+          importPath: "Notes",
           minWidth: "300px",
           componentProps: {
             title: "Notes"
@@ -33,7 +33,7 @@ const panes = [
           importPath: "ThreeJsCube",
           minWidth: "300px",
           componentProps: {
-            title: "3D View Bottom"
+            title: "Model Cards"
           }
         }
       ]
@@ -52,60 +52,23 @@ const panes = [
 ---
 
 <Layout title="Split View">
-  <div class="fixed inset-0 flex flex-col bg-gray-900 text-gray-100">
+  <div class="h-screen w-screen bg-gray-900 text-gray-100 overflow-hidden">
     <FloatingNav client:only="react" />
-    <div class="flex-1 overflow-hidden">
-      <SplitLayout client:only="react" panes={panes} />
-    </div>
+    <SplitLayout client:only="react" panes={panes} />
   </div>
 </Layout>
 
 <style>
-  /* Split pane styles */
-  :global(.split) {
-    height: 100%;
-    display: flex;
-  }
-
-  :global(.split.vertical) {
-    flex-direction: column;
-  }
-
-  :global(.split.horizontal) {
-    flex-direction: row;
-  }
-
-  :global(.split-pane) {
-    height: 100%;
-    overflow: hidden;
-  }
-
   :global(.gutter) {
     background-color: #4a5568;
-    background-repeat: no-repeat;
-    background-position: 50%;
-    transition: background-color 0.15s;
   }
-
   :global(.gutter:hover) {
-    background-color: #718096;
+    background-color: #667eea;
   }
-
   :global(.gutter.gutter-horizontal) {
     cursor: col-resize;
-    width: 4px;
   }
-
   :global(.gutter.gutter-vertical) {
     cursor: row-resize;
-    height: 4px;
   }
 </style>
-
-<script>
-  // Handle component selection events
-  document.addEventListener('componentSelected', (e: any) => {
-    const event = e as CustomEvent<{ importPath: string; componentProps: Record<string, any> }>;
-    console.log('Component selected:', event.detail);
-  });
-</script>

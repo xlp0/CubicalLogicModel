@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, Suspense, lazy, useState } from 'react';
 import Split from 'split.js';
-import MCard from './MCard';
 
 interface PaneConfig {
   importPath: string;
@@ -21,7 +20,18 @@ interface SplitLayoutProps {
   panes: PaneConfig[];
 }
 
-const SplitLayout: React.FC<SplitLayoutProps> = ({ panes }) => {
+interface ComponentSelectedEvent extends CustomEvent {
+  detail: {
+    importPath: string;
+    componentProps: Record<string, any>;
+  };
+}
+
+// Lazy load MCard
+const MCard = lazy(() => import('./MCard'));
+
+const SplitLayout: React.FC<SplitLayoutProps> = ({ panes: initialPanes }) => {
+  const [panes, setPanes] = useState<PaneConfig[]>(initialPanes);
   const splitRef = useRef<Split.Instance[]>([]);
 
   useEffect(() => {
@@ -56,6 +66,31 @@ const SplitLayout: React.FC<SplitLayoutProps> = ({ panes }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleComponentSelected = (event: Event) => {
+      const { importPath, componentProps } = (event as ComponentSelectedEvent).detail;
+      
+      setPanes(currentPanes => {
+        const newPanes = [...currentPanes];
+        // Update the first pane in the middle vertical split
+        if (newPanes[1]?.split?.panes) {
+          newPanes[1].split.panes[0] = {
+            ...newPanes[1].split.panes[0],
+            importPath,
+            componentProps: {
+              ...newPanes[1].split.panes[0].componentProps,
+              ...componentProps
+            }
+          };
+        }
+        return newPanes;
+      });
+    };
+
+    document.addEventListener('componentSelected', handleComponentSelected);
+    return () => document.removeEventListener('componentSelected', handleComponentSelected);
+  }, []);
+
   const renderPane = (pane: PaneConfig, index: number) => {
     if (pane.split) {
       return (
@@ -76,10 +111,7 @@ const SplitLayout: React.FC<SplitLayoutProps> = ({ panes }) => {
                 height: '100%',
               }}
             >
-              <MCard 
-                importPath={splitPane.importPath}
-                componentProps={splitPane.componentProps}
-              />
+              {renderComponent(splitPane)}
             </div>
           ))}
         </div>
@@ -87,29 +119,35 @@ const SplitLayout: React.FC<SplitLayoutProps> = ({ panes }) => {
     }
 
     return (
-      <div 
-        className="split-pane"
+      <div
+        key={`pane-${index}`}
+        className="pane"
         style={{ 
-          width: pane.width, 
+          width: pane.width,
           minWidth: pane.minWidth,
+          flex: pane.flex,
           height: '100%',
         }}
       >
-        <MCard 
-          importPath={pane.importPath}
-          componentProps={pane.componentProps}
-        />
+        {renderComponent(pane)}
       </div>
     );
   };
 
+  const renderComponent = (pane: PaneConfig) => {
+    return (
+      <Suspense fallback={<div className="w-full h-full bg-gray-800 animate-pulse" />}>
+        <MCard
+          importPath={pane.importPath}
+          componentProps={pane.componentProps}
+        />
+      </Suspense>
+    );
+  };
+
   return (
-    <div className="split horizontal" style={{ height: '100%' }}>
-      {panes.map((pane, index) => (
-        <React.Fragment key={`pane-${index}`}>
-          {renderPane(pane, index)}
-        </React.Fragment>
-      ))}
+    <div className="h-full flex">
+      {panes.map((pane, index) => renderPane(pane, index))}
     </div>
   );
 };
