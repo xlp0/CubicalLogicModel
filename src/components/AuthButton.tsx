@@ -46,31 +46,94 @@ export default function AuthButton() {
     console.group('🔐 [AuthButton] Logout Process');
     console.log('Clearing auth state...');
     tokenManager.clear();
+    window.location.replace('/'); // Redirect to home page after logout
     console.log('✅ Logout complete');
     console.groupEnd();
   };
 
-  const buttonBaseStyle = "w-full text-left text-sm text-gray-200 hover:bg-gray-700/90 hover:text-white transition-colors";
+  // Styling for the button container
+  const buttonContainerStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: '16px',
+    right: '16px',
+    zIndex: 1000,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  };
+
+  // Styling for the user display
+  const userDisplayStyle: React.CSSProperties = {
+    backgroundColor: 'rgba(0,0,0,0.1)',  // Dark background for better contrast
+    color: '#f4f4f4',  // Light text color for strong contrast
+    padding: '8px 12px',
+    borderRadius: '6px',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    maxWidth: '150px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    border: '1px solid rgba(255,255,255,0.2)',  // Subtle border for definition
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',  // Slight depth
+  };
+
+  // Styling for the button
+  const buttonStyle = (isAuthenticated: boolean): React.CSSProperties => ({
+    padding: '10px 20px',
+    borderRadius: '8px',
+    border: 'none',
+    cursor: isLoading ? 'not-allowed' : 'pointer',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    textTransform: 'uppercase',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+    transition: 'background-color 0.3s ease',
+    backgroundColor: isAuthenticated ? '#FF4D4D' : '#4A90E2',
+    color: 'white',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: isLoading ? 0.5 : 1,
+  });
 
   if (isLoading) {
     return (
-      <button className={`${buttonBaseStyle} opacity-50 cursor-not-allowed`} disabled>
-        Loading...
-      </button>
+      <div style={buttonContainerStyle}>
+        <button 
+          style={buttonStyle(false)} 
+          disabled
+        >
+          Loading...
+        </button>
+      </div>
     );
   }
 
   if (auth.isAuthenticated && auth.user) {
     return (
-      <button className={buttonBaseStyle} onClick={handleLogout}>
-        Logout ({auth.user.name})
-      </button>
+      <div style={buttonContainerStyle}>
+        <div style={userDisplayStyle}>
+          {auth.user.name}
+        </div>
+        <button 
+          style={buttonStyle(true)} 
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
     );
   }
 
   return (
-    <button className={buttonBaseStyle} onClick={handleLogin}>
-      Login
-    </button>
+    <div style={buttonContainerStyle}>
+      <button 
+        style={buttonStyle(false)} 
+        onClick={handleLogin}
+      >
+        Login
+      </button>
+    </div>
   );
 }
