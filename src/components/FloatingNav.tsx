@@ -21,16 +21,16 @@ const FloatingNav: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-4 left-4 z-50">
+    <div className="fixed bottom-6 left-6 z-[100]">
       <div className="relative">
         {isOpen && (
-          <div className="absolute left-0 bottom-full mb-2 w-48 bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden">
-            <div className="py-1">
+          <div className="absolute left-0 bottom-full mb-2 w-56 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden border border-gray-700/50">
+            <div className="py-2">
               {navItems.map((item) => (
                 <a
                   key={item.path}
                   href={item.path}
-                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/90 transition-colors"
+                  className="block px-4 py-2.5 text-sm text-gray-200 hover:bg-gray-700/90 hover:text-white transition-colors"
                 >
                   {item.name}
                 </a>
@@ -41,12 +41,12 @@ const FloatingNav: React.FC = () => {
         
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-3 py-2 bg-gray-800/90 hover:bg-gray-700/90 text-gray-200 rounded-lg shadow-lg transition-colors backdrop-blur-sm"
+          className="flex items-center gap-2 px-4 py-2.5 bg-gray-800/95 hover:bg-gray-700/95 text-gray-200 hover:text-white rounded-lg shadow-lg transition-all backdrop-blur-sm border border-gray-700/50"
         >
-          <Menu size={16} />
-          <span>Navigation</span>
+          <Menu size={18} />
+          <span className="text-sm font-medium">Navigation</span>
           <ChevronDown
-            size={16}
+            size={18}
             className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
           />
         </button>

@@ -2,28 +2,40 @@
 import FloatingNav from '../components/FloatingNav';
 import PaginatedCardList from '../components/CardContent/PaginatedCardList';
 import selectedCards from '../data/SelectedCards.json';
+import Layout from '../layouts/Layout.astro';
 
 // Add debug logging
 console.log('PaginatedCards page loading with cards:', selectedCards.cards);
 ---
 
-<div class="h-screen w-screen bg-gray-900 text-gray-100">
-  <FloatingNav client:load />
-  <div class="container mx-auto p-8">
-    <h1 class="text-3xl font-bold mb-6">Paginated Card Gallery</h1>
-    <PaginatedCardList
-      client:only="react"
-      title="Model Cards"
-      cards={selectedCards.cards}
-      columns={5}
-      gap={2}
-      itemsPerPage={15}
-    />
+<Layout title="Paginated Card Gallery">
+  <div class="min-h-screen w-full bg-gray-900 text-gray-100 relative overflow-hidden">
+    <FloatingNav client:load />
+    <div class="container mx-auto px-8 py-6">
+      <h1 class="text-3xl font-bold mb-8 text-gray-100">Paginated Card Gallery</h1>
+      <div class="relative">
+        <PaginatedCardList
+          client:only="react"
+          title="Model Cards"
+          cards={selectedCards.cards}
+          columns={5}
+          gap={2}
+          itemsPerPage={15}
+        />
+      </div>
+    </div>
   </div>
-</div>
+</Layout>
 
 <style>
   :global(:root) {
     color-scheme: dark;
+  }
+  
+  :global(body) {
+    background-color: rgb(17, 24, 39);
+    color: rgb(243, 244, 246);
+    margin: 0;
+    padding: 0;
   }
 </style>
