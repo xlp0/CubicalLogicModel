@@ -16,7 +16,8 @@ import {
   FaChartBar,
   FaPalette,
   FaFileAlt,
-  FaFolder
+  FaFolder,
+  FaDiagram
 } from 'react-icons/fa';
 
 interface CardData {
@@ -94,7 +95,8 @@ export default function ComponentSelector({ onComponentSelect, title = "Componen
       'ConcreteImpl': <FaCode className="w-5 h-5 text-indigo-500 flex-shrink-0" />,
       'TreeView': <FaFolder className="w-5 h-5 text-yellow-500 flex-shrink-0" />,
       'WebPageCube': <FaCube className="w-5 h-5 text-pink-500 flex-shrink-0" />,
-      'Counter': <FaReact className="w-5 h-5 text-cyan-400 animate-spin-slow flex-shrink-0" />
+      'Counter': <FaReact className="w-5 h-5 text-cyan-400 animate-spin-slow flex-shrink-0" />,
+      'MermaidCard': <FaDiagram className="w-5 h-5 text-green-400 flex-shrink-0" />
     };
 
     return iconMap[importPath] || <FileText className="w-5 h-5 text-gray-400 flex-shrink-0" />;

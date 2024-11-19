@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ChevronDown, Menu } from 'lucide-react';
+import AuthButton from './AuthButton';
 
 interface NavItem {
   name: string;
@@ -35,6 +36,9 @@ const FloatingNav: React.FC = () => {
                   {item.name}
                 </a>
               ))}
+              <div className="px-4 py-2.5">
+                <AuthButton />
+              </div>
             </div>
           </div>
         )}

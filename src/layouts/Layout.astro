@@ -19,8 +19,13 @@ import '../styles/globals.css';
     <title>{title}</title>
   </head>
   <body class="h-screen bg-gray-900">
-    <FloatingNav client:only="react" />
-    <slot />
+    <div id="app">
+      <FloatingNav client:load />
+      <slot />
+    </div>
+    <script>
+      console.log('Layout mounted');
+    </script>
   </body>
 </html>
 
