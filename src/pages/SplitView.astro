@@ -54,21 +54,39 @@ const panes = [
 <Layout title="Split View">
   <div class="h-screen w-screen bg-gray-900 text-gray-100 overflow-hidden">
     <FloatingNav client:only="react" />
-    <SplitLayout client:only="react" panes={panes} />
+    <div class="h-full w-full">
+      <SplitLayout client:only="react" panes={panes} />
+    </div>
   </div>
 </Layout>
 
 <style>
   :global(.gutter) {
     background-color: #4a5568;
+    transition: background-color 0.2s ease;
   }
+
   :global(.gutter:hover) {
     background-color: #667eea;
   }
+
   :global(.gutter.gutter-horizontal) {
     cursor: col-resize;
+    width: 8px;
   }
+
   :global(.gutter.gutter-vertical) {
     cursor: row-resize;
+    height: 8px;
+  }
+
+  :global(.vertical-split) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  :global(.main-split) {
+    display: flex;
+    flex-direction: row;
   }
 </style>
