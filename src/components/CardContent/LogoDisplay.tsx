@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+'use client';
+
+import { useEffect, useState, useRef } from 'react';
 
 interface ImageDisplayProps {
   title?: string;
@@ -8,7 +10,7 @@ interface ImageDisplayProps {
   className?: string;
 }
 
-const ImageDisplay: React.FC<ImageDisplayProps> = ({
+const ImageDisplay = ({
   title,
   iconPath = '/icons/windsurf.svg',
   width = 40,

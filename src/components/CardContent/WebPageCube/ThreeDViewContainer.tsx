@@ -1,8 +1,10 @@
-import React from 'react';
+'use client';
+
+import { type ReactNode } from 'react';
 
 interface ThreeDViewContainerProps {
   orientation?: 'front' | 'back' | 'right' | 'left' | 'top' | 'bottom';
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function ThreeDViewContainer({ 

@@ -20,6 +20,7 @@ import {
   FaFolder,
   FaSearch
 } from 'react-icons/fa';
+import type { ChangeEvent } from 'react';
 
 interface CardData {
   id: number;
@@ -117,7 +118,7 @@ export default function SearchableCardsFromDB({ onComponentSelect, title = "Comp
     }
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     
     console.group('[Client] Search Change Debug');
@@ -155,7 +156,7 @@ export default function SearchableCardsFromDB({ onComponentSelect, title = "Comp
   const handleSelect = (card: CardWithId) => {
     setActiveCardId(card.uniqueId);
     
-    const event = new CustomEvent('componentSelected', { 
+    const event = new CustomEvent('component-selected', { 
       detail: {
         importPath: card.importPath,
         componentProps: card.componentProps

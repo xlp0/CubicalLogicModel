@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState, FC } from 'react';
 import YouTube from 'react-youtube';
 
 interface YouTubePlayerProps {
@@ -19,7 +19,7 @@ interface YouTubeOpts {
   };
 }
 
-const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ 
+const YouTubePlayer: FC<YouTubePlayerProps> = ({ 
   videoId = "ipf4Gw_y210",
   title = "YouTube Player" 
 }) => {

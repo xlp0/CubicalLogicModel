@@ -1,4 +1,6 @@
-import React, { useState, Suspense } from 'react';
+'use client';
+
+import { useState, Suspense, type CSSProperties } from 'react';
 import MCard from '../MCard';
 
 interface CardConfig {
@@ -15,10 +17,10 @@ interface PaginatedCardListProps {
   gap?: number;
   itemsPerPage?: number;
   className?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 }
 
-const PaginatedCardList: React.FC<PaginatedCardListProps> = ({
+const PaginatedCardList = ({
   title,
   cards,
   columns = 4,
@@ -26,7 +28,7 @@ const PaginatedCardList: React.FC<PaginatedCardListProps> = ({
   itemsPerPage = 12,
   className = '',
   style = {}
-}) => {
+}: PaginatedCardListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate pagination

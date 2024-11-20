@@ -1,9 +1,11 @@
-import React from 'react';
+'use client';
+
+import { type ReactNode } from 'react';
 
 interface CubeFaceProps {
   position: [number, number, number] | 'front' | 'back' | 'right' | 'left' | 'top' | 'bottom';
   rotation?: [number, number, number];
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function CubeFace({ position, rotation = [0, 0, 0], children }: CubeFaceProps) {

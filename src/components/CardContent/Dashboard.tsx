@@ -1,6 +1,5 @@
 "use client";
 
-import React from 'react';
 import {
   LineChart, Line, AreaChart, Area, BarChart, Bar,
   PieChart, Pie, RadarChart, Radar,

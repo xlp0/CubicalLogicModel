@@ -1,13 +1,13 @@
 'use client';
 
-import React, { Suspense, lazy, useMemo, useEffect, useState, useRef } from 'react';
-import type { FC, ComponentProps } from 'react';
+import { Suspense, lazy, useMemo, useEffect, useState, useRef } from 'react';
+import type { FC, ComponentProps, CSSProperties } from 'react';
 
 interface MCardProps {
   importPath?: string;
   defaultContent?: FC<any>;
   componentProps?: ComponentProps<any> & {
-    style?: React.CSSProperties;
+    style?: CSSProperties;
   };
 }
 

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { forwardRef, ChangeEvent } from "react";
 import { cn } from "@/lib/utils";
 
 export interface SliderProps {
@@ -11,25 +11,27 @@ export interface SliderProps {
   label?: string;
 }
 
-const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
+const Slider = forwardRef<HTMLInputElement, SliderProps>(
   ({ className, label, onChange, ...props }, ref) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       onChange?.(Number(e.target.value));
     };
 
     return (
       <div className="relative w-full">
         {label && (
-          <label className="mb-2 block text-sm font-medium">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
             {label}
           </label>
         )}
         <input
           type="range"
           className={cn(
-            "w-full cursor-pointer appearance-none bg-gray-200 rounded-lg h-2 accent-primary",
-            "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
-            "hover:bg-gray-300",
+            "w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer",
+            "focus:outline-none focus:ring-2 focus:ring-blue-500",
+            "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4",
+            "[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500",
+            "[&::-webkit-slider-thumb]:hover:bg-blue-600 [&::-webkit-slider-thumb]:transition-colors",
             className
           )}
           ref={ref}

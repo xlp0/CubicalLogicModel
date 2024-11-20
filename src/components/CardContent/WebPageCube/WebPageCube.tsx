@@ -76,12 +76,12 @@ export default function WebPageCube({
     };
   }, [isRotating, isDragging, animate]);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+  const handleMouseDown = useCallback((e: MouseEvent) => {
     setIsDragging(true);
     setLastMousePos({ x: e.clientX, y: e.clientY });
   }, []);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging) return;
 
     const deltaX = e.clientX - lastMousePos.x;

@@ -1,92 +1,102 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Features from '../components/landing/Features.astro';
-import Courses from '../components/landing/Courses.astro';
-import FloatingNav from '../components/FloatingNav';
-import AuthButton from '../components/AuthButton';
+import AuthButton from '../components/AuthButton.astro';
 
-// Log the environment variables
-console.log('[Index] Environment:', {
-  clientId: import.meta.env.PUBLIC_AUTHENTIK_CLIENT_ID,
-  hasSecret: !!import.meta.env.AUTHENTIK_CLIENT_SECRET,
+// Get environment variables at build time
+const AUTHENTIK_URL = import.meta.env.PUBLIC_AUTHENTIK_BASE_URL;
+const CLIENT_ID = import.meta.env.PUBLIC_AUTHENTIK_CLIENT_ID;
+const APP_SLUG = import.meta.env.PUBLIC_AUTHENTIK_APPLICATION_SLUG;
+const REDIRECT_URI = import.meta.env.PUBLIC_AUTHENTIK_REDIRECT_URI || 
+  `${Astro.url.origin}/api/auth/callback/authentik`;
+
+// Create auth state for client
+const initialAuthState = {
+  user: null,
+  isAuthenticated: false,
+  loading: false,
+  error: null
+};
+
+// Log environment variables during build
+console.log('Build-time environment variables:', {
+  AUTHENTIK_URL,
+  CLIENT_ID,
+  APP_SLUG,
+  REDIRECT_URI
 });
-
-// Check for authentication success flag
-const urlParams = Astro.url.searchParams;
-const authSuccess = urlParams.get('auth') === 'success';
-const authError = urlParams.get('error');
 ---
 
 <Layout title="GASing - Interactive Learning Platform">
-	<FloatingNav client:load />
-	<main>
-		<section class="relative overflow-hidden bg-gray-900 py-20">
-			<div class="absolute inset-0 bg-grid-white/[0.02] -z-10"></div>
-			<div class="absolute inset-0 bg-gradient-to-b from-gray-900/30 to-gray-900/80 -z-10"></div>
-			
-			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-				<h1 class="text-5xl font-bold text-white mb-6">
-					Welcome to GASing
-				</h1>
-				<p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-					Your gateway to interactive learning and understanding complex concepts through innovative 3D visualization.
-				</p>
-				
-				{authError && (
-					<div class="bg-red-600 text-white p-4 rounded-lg mb-4">
-						Authentication Error: {authError}
-					</div>
-				)}
-
-				<div class="flex justify-center">
-					<AuthButton client:load />
-				</div>
-			</div>
-		</section>
-		<Features />
-		<Courses />
-	</main>
-</Layout>
-
-<script define:vars={{ authSuccess }}>
-  import { initAuthFromCookies } from '../stores/authStore';
+  <!-- Add configuration meta tags -->
+  <meta slot="head" name="authentik-url" content={AUTHENTIK_URL} />
+  <meta slot="head" name="client-id" content={CLIENT_ID} />
+  <meta slot="head" name="redirect-uri" content={REDIRECT_URI} />
   
-  // Initialize auth state when the page loads
-  if (typeof window !== 'undefined') {
-    // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        console.log('[Index] DOM loaded, initializing auth state');
-        
-        // Force re-initialization if auth success flag is set
-        if (authSuccess) {
-          console.log('[Index] Auth success detected, forcing auth state refresh');
-          window.localStorage.setItem('authRedirect', 'true');
-        }
-        
-        initAuthFromCookies();
-      });
-    } else {
-      console.log('[Index] DOM already loaded, initializing auth state');
+  <main class="container mx-auto px-4 py-8">
+    <section class="relative overflow-hidden bg-gray-900 py-20">
+      <div class="absolute inset-0 bg-grid-white/[0.02] -z-10"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-gray-900/30 to-gray-900/80 -z-10"></div>
       
-      // Force re-initialization if auth success flag is set
-      if (authSuccess) {
-        console.log('[Index] Auth success detected, forcing auth state refresh');
-        window.localStorage.setItem('authRedirect', 'true');
-      }
-      
-      initAuthFromCookies();
-    }
-  }
-</script>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="flex justify-center mb-8">
+          <img src="/icons/egasing_logo.png" alt="GASing Logo" class="h-24 w-auto" />
+        </div>
+        <h1 class="text-5xl font-bold text-white mb-6">
+          Welcome to GASing
+        </h1>
+        
+        <div class="flex justify-center mb-8">
+          <div class="w-full max-w-md">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden p-4">
+              <div id="auth-container" class="space-y-4">
+                <AuthButton />
+                
+                <div id="user-profile" class="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg hidden">
+                  <h2 class="text-xl font-semibold mb-2">User Profile</h2>
+                  <p><strong>Name:</strong> <span id="user-name"></span></p>
+                  <p><strong>Email:</strong> <span id="user-email"></span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-<style>
-	main {
-		width: 100%;
-		padding-top: 4rem;
-	}
-	
-	.bg-grid-white {
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.1'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/svg%3E");
-	}
-</style>
+  <script>
+    // Initialize user profile display
+    function updateUserProfile(user) {
+      const profileDiv = document.getElementById('user-profile');
+      const nameSpan = document.getElementById('user-name');
+      const emailSpan = document.getElementById('user-email');
+      
+      if (user) {
+        nameSpan.textContent = user.name;
+        emailSpan.textContent = user.email;
+        profileDiv.classList.remove('hidden');
+      } else {
+        profileDiv.classList.add('hidden');
+      }
+    }
+
+    // Check auth status on page load
+    const token = sessionStorage.getItem('auth_token');
+    if (token) {
+      fetch('/api/auth/status', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => response.json())
+      .then(({ authenticated, user }) => {
+        if (authenticated && user) {
+          updateUserProfile(user);
+        }
+      })
+      .catch(error => {
+        console.error('[Auth] Failed to check auth status:', error);
+      });
+    }
+  </script>
+</Layout>

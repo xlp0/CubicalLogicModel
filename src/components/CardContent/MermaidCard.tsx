@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import type { FC } from 'react';
 import mermaid from 'mermaid';
 
 interface MermaidCardProps {
   contentString?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 }
 
 const defaultContent = `

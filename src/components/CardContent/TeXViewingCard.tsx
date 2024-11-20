@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -13,7 +13,7 @@ interface TeXViewingCardProps {
   title?: string;
   contentString?: string;
   fileName?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 }
 
 const defaultTeXContent = `# TeX Viewer

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, Suspense, lazy, useState } from 'react';
+import { useEffect, useRef, Suspense, lazy, useState, FC, Fragment } from 'react';
 import Split from 'split.js';
 
 interface PaneConfig {
@@ -30,7 +30,7 @@ interface ComponentSelectedEvent extends CustomEvent {
 // Lazy load MCard
 const MCard = lazy(() => import('./MCard'));
 
-const SplitLayout: React.FC<SplitLayoutProps> = ({ panes: initialPanes }) => {
+const SplitLayout: FC<SplitLayoutProps> = ({ panes: initialPanes }) => {
   const [panes, setPanes] = useState<PaneConfig[]>(initialPanes);
   const splitRef = useRef<Split.Instance[]>([]);
 
@@ -45,109 +45,88 @@ const SplitLayout: React.FC<SplitLayoutProps> = ({ panes: initialPanes }) => {
       const direction = element.classList.contains('vertical') ? 'vertical' : 'horizontal';
       const children = Array.from(element.children).filter(child => !child.classList.contains('gutter'));
       
+      if (children.length < 2) {
+        console.warn('Split container has less than 2 children:', element);
+        return;
+      }
+
       const instance = Split(children as HTMLElement[], {
         direction,
         gutterSize: 4,
         minSize: 100,
-        snapOffset: 0,
+        cursor: direction === 'vertical' ? 'row-resize' : 'col-resize',
         gutter: (index, direction) => {
           const gutter = document.createElement('div');
           gutter.className = `gutter gutter-${direction}`;
           return gutter;
-        },
+        }
       });
       
       splitRef.current.push(instance);
     });
 
-    return () => {
-      // Cleanup on unmount
-      splitRef.current.forEach(instance => instance.destroy());
-    };
-  }, []);
-
-  useEffect(() => {
+    // Add event listener for component selection
     const handleComponentSelected = (event: Event) => {
       const { importPath, componentProps } = (event as ComponentSelectedEvent).detail;
-      
       setPanes(currentPanes => {
         const newPanes = [...currentPanes];
-        // Update the first pane in the middle vertical split
-        if (newPanes[1]?.split?.panes) {
-          newPanes[1].split.panes[0] = {
-            ...newPanes[1].split.panes[0],
+        // Update the first pane in the middle split section
+        const middlePane = newPanes[1];
+        if (middlePane && middlePane.split) {
+          middlePane.split.panes[0] = {
+            ...middlePane.split.panes[0],
             importPath,
-            componentProps: {
-              ...newPanes[1].split.panes[0].componentProps,
-              ...componentProps
-            }
+            componentProps
           };
         }
         return newPanes;
       });
     };
 
-    document.addEventListener('componentSelected', handleComponentSelected);
-    return () => document.removeEventListener('componentSelected', handleComponentSelected);
+    window.addEventListener('component-selected', handleComponentSelected as EventListener);
+
+    return () => {
+      // Clean up Split instances and event listener
+      splitRef.current.forEach(instance => instance.destroy());
+      window.removeEventListener('component-selected', handleComponentSelected as EventListener);
+    };
   }, []);
 
-  const renderPane = (pane: PaneConfig, index: number) => {
+  const renderPane = (pane: PaneConfig) => {
     if (pane.split) {
       return (
-        <div 
-          className={`split ${pane.split.direction}`}
-          style={{ 
-            width: pane.width, 
-            minWidth: pane.minWidth,
-            height: '100%',
-          }}
-        >
-          {pane.split.panes.map((splitPane, splitIndex) => (
-            <div 
-              key={`split-pane-${index}-${splitIndex}`}
-              className="split-pane"
-              style={{ 
-                minWidth: splitPane.minWidth,
-                height: '100%',
-              }}
-            >
-              {renderComponent(splitPane)}
-            </div>
-          ))}
+        <div className={`split ${pane.split.direction}`} style={{ flex: pane.flex || 1 }}>
+          {renderPane(pane.split.panes[0])}
+          {renderPane(pane.split.panes[1])}
         </div>
       );
     }
 
     return (
-      <div
-        key={`pane-${index}`}
-        className="pane"
-        style={{ 
-          width: pane.width,
-          minWidth: pane.minWidth,
-          flex: pane.flex,
-          height: '100%',
-        }}
-      >
-        {renderComponent(pane)}
+      <div style={{ 
+        flex: pane.flex || 1,
+        width: pane.width || 'auto',
+        minWidth: pane.minWidth || '0',
+        height: '100%',
+        position: 'relative'
+      }}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <MCard 
+            importPath={pane.importPath} 
+            componentProps={pane.componentProps}
+          />
+        </Suspense>
       </div>
     );
   };
 
-  const renderComponent = (pane: PaneConfig) => {
-    return (
-      <Suspense fallback={<div className="w-full h-full bg-gray-800 animate-pulse" />}>
-        <MCard
-          importPath={pane.importPath}
-          componentProps={pane.componentProps}
-        />
-      </Suspense>
-    );
-  };
-
   return (
-    <div className="h-full flex">
-      {panes.map((pane, index) => renderPane(pane, index))}
+    <div className="h-full w-full flex">
+      {panes.map((pane, index) => (
+        <Fragment key={index}>
+          {renderPane(pane)}
+        </Fragment>
+      ))}
     </div>
   );
 };

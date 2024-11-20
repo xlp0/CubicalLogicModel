@@ -1,7 +1,5 @@
-'use client';
-
-import React, { useState } from 'react';
-import { ChevronDown, Menu } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronUp, Menu } from 'lucide-react';
 
 interface NavItem {
   name: string;
@@ -17,14 +15,14 @@ const navItems: NavItem[] = [
   { name: 'Pages On Cube', path: '/PagesOnCube' },
 ];
 
-const FloatingNav: React.FC = () => {
+export default function FloatingNav() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="fixed bottom-6 left-6 z-[100]">
       <div className="relative">
         {isOpen && (
-          <div className="absolute left-0 bottom-full mb-2 w-56 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden border border-gray-700/50">
+          <div className="absolute left-0 bottom-[calc(100%+0.5rem)] w-56 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden border border-gray-700/50 transform transition-all duration-200 ease-out origin-bottom">
             <div className="py-2">
               {navItems.map((item) => (
                 <a
@@ -45,7 +43,7 @@ const FloatingNav: React.FC = () => {
         >
           <Menu size={18} />
           <span className="text-sm font-medium">Navigation</span>
-          <ChevronDown
+          <ChevronUp
             size={18}
             className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
           />
@@ -53,6 +51,4 @@ const FloatingNav: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default FloatingNav;
+}

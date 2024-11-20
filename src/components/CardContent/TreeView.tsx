@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+'use client';
+
+import { useState, useEffect, type MouseEvent } from 'react';
 import { ChevronRight, ChevronDown, Folder, FileText } from 'lucide-react';
 
 interface TreeNode {
@@ -58,7 +60,7 @@ const TreeNodeComponent: React.FC<TreeNodeComponentProps> = ({ node, onFileClick
   const [isOpen, setIsOpen] = useState(false);
   const hasChildren = node.children && node.children.length > 0;
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
     if (hasChildren) {
       setIsOpen(!isOpen);
