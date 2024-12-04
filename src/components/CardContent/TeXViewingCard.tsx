@@ -4,10 +4,9 @@ import { useState, useEffect, type CSSProperties } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import remarkGfm from 'remark-gfm';
 import 'katex/dist/katex.min.css';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 
 interface TeXViewingCardProps {
   title?: string;
@@ -16,53 +15,16 @@ interface TeXViewingCardProps {
   style?: CSSProperties;
 }
 
-const defaultTeXContent = `# TeX Viewer
+const defaultTeXContent = `# Math Example
 
-## Inline Math Example
+## Inline Math
 When $a \\ne 0$, there are two solutions to $ax^2 + bx + c = 0$ and they are:
 
-## Display Math Example
+## Display Math
 $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}$$
-
-## Matrix Examples
-1. Simple Matrix:
-$$
-\\begin{matrix}
-a & b \\\\
-c & d
-\\end{matrix}
-$$
-
-2. Matrix with parentheses:
-$$
-\\begin{pmatrix}
-1 & 2 & 3 \\\\
-4 & 5 & 6 \\\\
-7 & 8 & 9
-\\end{pmatrix}
-$$
-
-3. Matrix with brackets:
-$$
-\\begin{bmatrix}
-x_{11} & x_{12} \\\\
-x_{21} & x_{22}
-\\end{bmatrix}
-$$
-
-4. Augmented Matrix:
-$$
-\\left[
-\\begin{array}{cc|c}
-1 & 2 & 3 \\\\
-4 & 5 & 6
-\\end{array}
-\\right]
-$$
 `;
 
 export default function TeXViewingCard(props: TeXViewingCardProps) {
-  // Extract all props with defaults
   const { 
     title = "TeX Viewer",
     contentString,
@@ -73,6 +35,7 @@ export default function TeXViewingCard(props: TeXViewingCardProps) {
   const [content, setContent] = useState(contentString ?? defaultTeXContent);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Update content when contentString prop changes
   useEffect(() => {
@@ -95,31 +58,15 @@ export default function TeXViewingCard(props: TeXViewingCardProps) {
         .then(text => {
           setContent(text);
           setIsLoading(false);
+          setError(null);
         })
         .catch(error => {
-          console.error('Error loading markdown file:', error);
-          setContent(`Error loading ${fileName}: ${error.message}`);
+          console.error('Error loading file:', error);
+          setError(`Error loading ${fileName}: ${error.message}`);
           setIsLoading(false);
         });
     }
   }, [fileName]);
-
-  const katexOptions = {
-    strict: false,
-    trust: true,
-    throwOnError: false,
-    macros: {
-      "\\eqref": "\\href{###1}{(\\text{#1})}",
-      "\\label": "\\htmlId{#1}{}",
-      "\\ref": "\\href{###1}{\\text{#1}}"
-    },
-    fleqn: false,
-    leqno: false,
-    output: "html",
-    maxSize: 500,
-    maxExpand: 1000,
-    displayMode: true
-  };
 
   return (
     <div className="h-full flex flex-col bg-gray-50 dark:bg-gray-900" style={style}>
@@ -141,25 +88,28 @@ export default function TeXViewingCard(props: TeXViewingCardProps) {
           <div className="flex items-center justify-center h-full">
             <div className="animate-pulse text-gray-500">Loading...</div>
           </div>
+        ) : error ? (
+          <div className="p-4 text-red-500">{error}</div>
         ) : isEditing ? (
-          <Textarea
+          <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full h-full p-4 font-mono text-sm bg-white dark:bg-gray-800 dark:text-gray-100 resize-none"
+            className={cn(
+              "w-full h-full p-4",
+              "font-mono text-sm",
+              "text-white bg-[#1E1E1E]",
+              "resize-none",
+              "focus:outline-none focus:ring-0",
+              "selection:bg-blue-500/30"
+            )}
             placeholder="Enter your TeX markdown here..."
+            spellCheck={false}
           />
         ) : (
-          <div className="p-6 prose dark:prose-invert prose-sm sm:prose-base max-w-none overflow-x-auto">
+          <div className="p-6 prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg max-w-none">
             <ReactMarkdown
-              remarkPlugins={[remarkMath, remarkGfm]}
-              rehypePlugins={[[rehypeKatex, katexOptions]]}
-              components={{
-                pre: ({ node, ...props }) => (
-                  <div className="overflow-auto">
-                    <pre {...props} />
-                  </div>
-                ),
-              }}
+              remarkPlugins={[remarkMath]}
+              rehypePlugins={[rehypeKatex]}
             >
               {content}
             </ReactMarkdown>
