@@ -142,8 +142,8 @@
         "title": "Interactive Calculator"
       },
       "height": "400px"
-    }
-    ,{
+    },
+    {
       "importPath": "TeXViewingCard",
       "title": "Yet Another Math MD Examples",
       "componentProps": {

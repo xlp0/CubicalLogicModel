@@ -17,7 +17,9 @@ import {
   FaPalette,
   FaFileAlt,
   FaFolder,
-  FaDiagram
+  FaDiagram,
+  FaSquareRootAlt,
+  FaMarkdown
 } from 'react-icons/fa';
 
 interface CardData {
@@ -46,7 +48,7 @@ export default function ComponentSelector({ onComponentSelect, title = "Componen
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await fetch('/src/data/SelectedCards.json');
+        const response = await fetch('/data/SelectedCards.json');
         const data = await response.json();
         const cardsWithIds = data.cards.map((card: CardData, index: number) => ({
           ...card,
@@ -96,7 +98,9 @@ export default function ComponentSelector({ onComponentSelect, title = "Componen
       'TreeView': <FaFolder className="w-5 h-5 text-yellow-500 flex-shrink-0" />,
       'WebPageCube': <FaCube className="w-5 h-5 text-pink-500 flex-shrink-0" />,
       'Counter': <FaReact className="w-5 h-5 text-cyan-400 animate-spin-slow flex-shrink-0" />,
-      'MermaidCard': <FaDiagram className="w-5 h-5 text-green-400 flex-shrink-0" />
+      'MermaidCard': <FaDiagram className="w-5 h-5 text-green-400 flex-shrink-0" />,
+      'TeXViewingCard': <FaSquareRootAlt className="w-5 h-5 text-blue-400 flex-shrink-0" />,
+      'MarkdownViewingCard': <FaMarkdown className="w-5 h-5 text-purple-400 flex-shrink-0" />
     };
 
     return iconMap[importPath] || <FileText className="w-5 h-5 text-gray-400 flex-shrink-0" />;
