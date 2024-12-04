@@ -145,6 +145,10 @@ Adjust cube parameters in `cubeConfig.ts`:
 - Control sensitivity
 - Animation parameters
 
+## 📚 Documentation
+
+- [Dynamic Imports Design](./docs/dynamic-imports.md) - Detailed explanation of the dynamic import system and its design decisions
+
 ## 📝 License
 
 MIT License - feel free to use this project for your own purposes.

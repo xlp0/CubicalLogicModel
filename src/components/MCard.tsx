@@ -52,22 +52,34 @@ const MCard: FC<MCardProps> = ({ importPath: initialImportPath, defaultContent, 
   const DynamicComponent = useMemo(() => {
     if (!initialImportPath) return null;
 
+    const importMap = {
+      'SearchableCardSelector': () => import('./CardContent/SearchableCardSelector'),
+      'ComponentSelector': () => import('./CardContent/ComponentSelector'),
+      'SearchableCardsFromDB': () => import('./CardContent/SearchableCardsFromDB'),
+    };
+
     return lazy(() => {
       console.log('Loading component:', initialImportPath);
       
-      // Special case for SearchableCardSelector, ComponentSelector and SearchableCardsFromDB
-      if (initialImportPath === 'SearchableCardSelector' || initialImportPath === 'ComponentSelector' || initialImportPath === 'SearchableCardsFromDB') {
-        return import(`./CardContent/${initialImportPath}`);
-      }
+      try {
+        // Check if it's one of the predefined components
+        if (importMap[initialImportPath]) {
+          return importMap[initialImportPath]();
+        }
 
-      // Handle WebPageCube components
-      if (initialImportPath.startsWith('WebPageCube/')) {
-        const componentName = initialImportPath.split('/')[1];
-        return import(`./CardContent/WebPageCube/${componentName}`);
-      }
+        // Handle WebPageCube components
+        if (initialImportPath.startsWith('WebPageCube/')) {
+          const componentName = initialImportPath.split('/')[1];
+          // Using a more specific import pattern that Vite can analyze
+          return (/* @vite-ignore */ import('./CardContent/WebPageCube/' + componentName));
+        }
 
-      // Default import path
-      return import(`./CardContent/${initialImportPath}`);
+        // Default import path with a more specific pattern
+        return (/* @vite-ignore */ import('./CardContent/' + initialImportPath));
+      } catch (error) {
+        console.error('Error loading component:', error);
+        return Promise.reject(error);
+      }
     });
   }, [initialImportPath]);
 
